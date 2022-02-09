@@ -31,12 +31,13 @@ endif()
 
 # add the glfw and glm to the project
 add_subdirectory(external/glfw)
-# add_subdirectory(external/glm)
+add_subdirectory(external/glew)
 
 # find_package(Vulkan REQUIRED)
 
 target_include_directories(${PROJECT_NAME}
     # PRIVATE ${Vulkan_INCLUDE_DIRS}
+    PRIVATE ${PROJECT_SOURCE_DIR}/external/glew/include
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
 )
 
@@ -45,7 +46,7 @@ target_include_directories(${PROJECT_NAME}
 # target_include_directories(${PROJECT_NAME} PUBLIC ${vkValidateIncludeDirs})
 # target_include_directories(${PROJECT_NAME} PUBLIC ${vkEngineIncludeDirs})
 
-target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} glfw libglew_static)
 
 message(STATUS "test")
 
