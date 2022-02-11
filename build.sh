@@ -1,4 +1,4 @@
 #! /bin/sh/
 
-sh compileShader.sh
+# sh compileShader.sh
 cd out/build ; make

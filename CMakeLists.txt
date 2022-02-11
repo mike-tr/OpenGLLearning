@@ -3,11 +3,15 @@ project(openGLLearning VERSION 1.0)
 
 # Generate a config.h file with some settings like DEBUG etc...
 configure_file(config.h.in config.h)
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/functions.cpp)
+# add_library(${PROJECT_NAME} src/functions.cpp)
 
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/assets/shaders)
+# file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/assets/shaders)
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
+target_include_directories(${PROJECT_NAME} PUBLIC src/headers)
+target_include_directories(${PROJECT_NAME} PUBLIC external/headers)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
@@ -41,12 +45,12 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
 )
 
-# add_subdirectory(internal/vkValidate)
+add_subdirectory(internal/Shaders)
 # add_subdirectory(internal/vkEngine)
-# target_include_directories(${PROJECT_NAME} PUBLIC ${vkValidateIncludeDirs})
+target_include_directories(${PROJECT_NAME} PUBLIC ${shadersIncludeDirs})
 # target_include_directories(${PROJECT_NAME} PUBLIC ${vkEngineIncludeDirs})
 
-target_link_libraries(${PROJECT_NAME} glfw libglew_static)
+target_link_libraries(${PROJECT_NAME} glfw libglew_static shaders)
 
 message(STATUS "test")
 
