@@ -1,36 +1,95 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "functions.hpp"
+#include "camera.hpp"
 
 using namespace std;
 
 #define ENDING 4
 
 bool wireframe = false;
+
+std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec) {
+    os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const glm::vec3 &vec) {
+    os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+    return os;
+}
+
+glm::vec3 operator+(const glm::vec3 &base, const glm::vec4 &other) {
+    glm::vec3 n = base;
+    glm::vec4 no = other / other.w;
+    n.x += no.x;
+    n.y += no.y;
+    n.z += no.z;
+    return n;
+}
+
+glm::vec3 operator-(const glm::vec3 &base, const glm::vec4 &other) {
+    glm::vec3 n = base;
+    glm::vec4 no = other / other.w;
+    n.x -= no.x;
+    n.y -= no.y;
+    n.z -= no.z;
+    return n;
+}
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-
-    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    //     wireframe = !wireframe;
-    //     if (wireframe) {
-    //         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //     } else {
-    //         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    //     }
-    // }
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+    if (key == GLFW_KEY_T && action == GLFW_PRESS) {
         wireframe = !wireframe;
         if (wireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         } else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
+    } else if (key == GLFW_KEY_W && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, 1.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * 0.01f;
+        // cout << Camera::mainCamera.position.x << ", " << Camera::mainCamera.position.y << ", "
+        //      << Camera::mainCamera.position.z << endl;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_S && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, -1.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_D && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(1.0, 0.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_A && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(-1.0, 0.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_E && action == GLFW_REPEAT) {
+        Camera::mainCamera.rotate(0.01f, glm::vec3(0.0, 0.0, 1.0));
+    } else if (key == GLFW_KEY_UP && action == GLFW_REPEAT) {
+        Camera::mainCamera.globalTranslate(glm::vec3(0.0, 1.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * 0.01f;
+        // cout << Camera::mainCamera.position.x << ", " << Camera::mainCamera.position.y << ", "
+        //      << Camera::mainCamera.position.z << endl;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT) {
+        Camera::mainCamera.globalTranslate(glm::vec3(0.0, -1.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_RIGHT && action == GLFW_REPEAT) {
+        Camera::mainCamera.globalTranslate(glm::vec3(1.0, 0.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_LEFT && action == GLFW_REPEAT) {
+        Camera::mainCamera.globalTranslate(glm::vec3(-1.0, 0.0, 0.0) * 0.01f);
+        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * 0.01f;
+        // Camera::mainCamera.recalculate();
+    } else if (key == GLFW_KEY_Q && action == GLFW_REPEAT) {
+        Camera::mainCamera.rotate(-0.01f, glm::vec3(0.0, 0.0, 1.0));
     }
 }
 

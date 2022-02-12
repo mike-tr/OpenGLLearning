@@ -8,13 +8,15 @@ uniform float offset;
 uniform float time;
 
 uniform sampler2D normalTex;
+uniform mat4 transform;
+uniform mat4 camera;
 
 void main()
 {
     // gl_Position = vec4(aPos.x + offset * 2 - 1, aPos.y * (time * 2 - 1), aPos.z, 1.0);
     TexCoord = aTexCoord;
-    // vec4 n = texture(normalTex, TexCoord);
-    gl_Position = vec4(aPos, 1.0);
+    //vec4 n = texture(normalTex, TexCoord);
+    gl_Position = camera * transform * vec4(aPos, 1.0);
     vertexColor = vec4(aColor, 1.0);
 
 };

@@ -3,7 +3,7 @@ project(openGLLearning VERSION 1.0)
 
 # Generate a config.h file with some settings like DEBUG etc...
 configure_file(config.h.in config.h)
-add_executable(${PROJECT_NAME} src/main.cpp src/functions.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/functions.cpp src/camera.cpp src/gameObject.cpp)
 # add_library(${PROJECT_NAME} src/functions.cpp)
 
 # file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/assets/shaders)
@@ -36,6 +36,7 @@ endif()
 # add the glfw and glm to the project
 add_subdirectory(external/glfw)
 add_subdirectory(external/glew)
+add_subdirectory(external/glm)
 
 # find_package(Vulkan REQUIRED)
 
@@ -43,6 +44,7 @@ target_include_directories(${PROJECT_NAME}
     # PRIVATE ${Vulkan_INCLUDE_DIRS}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glew/include
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
 )
 
 add_subdirectory(internal/Shaders)

@@ -1,7 +1,8 @@
 // #define GLEW_STATIC
-#include "functions.hpp"
+#include "camera.hpp"
 #include "math.h"
 #include "shaders.hpp"
+#include <iomanip>
 
 using namespace std;
 
@@ -113,6 +114,19 @@ int main(void) {
 
     // unsigned int shaderProgram = load_shaders();
     // glUseProgram(shaderProgram);
+    std::cout << std::fixed;
+    std::cout << std::setprecision(2);
+
+    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    // glm::mat4 trans = glm::mat4(1.0f);
+    // // trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+    // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
+    // vec = trans * vec;
+    vec = vec + vec;
+    vec.y += 1;
+    std::cout << "( " << vec.x << ", " << vec.y << ", " << vec.z << " )" << std::endl;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
@@ -135,6 +149,34 @@ int main(void) {
         // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         ourShader.setFloat("time", greenValue);
         ourShader.setFloat("offset", greenValue);
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, -0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+        Camera::mainCamera.apply(ourShader.ID);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mainTex);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, blendTex);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, normalTex);
+        glBindVertexArray(VAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+        trans = glm::rotate(trans, 0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+        transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+        Camera::mainCamera.apply(ourShader.ID);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mainTex);
         glActiveTexture(GL_TEXTURE1);
