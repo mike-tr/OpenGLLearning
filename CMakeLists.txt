@@ -3,7 +3,7 @@ project(openGLLearning VERSION 1.0)
 
 # Generate a config.h file with some settings like DEBUG etc...
 configure_file(config.h.in config.h)
-add_executable(${PROJECT_NAME} src/main.cpp src/functions.cpp src/camera.cpp src/gameObject.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 # add_library(${PROJECT_NAME} src/functions.cpp)
 
 # file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/assets/shaders)
@@ -48,11 +48,13 @@ target_include_directories(${PROJECT_NAME}
 )
 
 add_subdirectory(internal/Shaders)
+add_subdirectory(internal/Engine)
 # add_subdirectory(internal/vkEngine)
 target_include_directories(${PROJECT_NAME} PUBLIC ${shadersIncludeDirs})
+target_include_directories(${PROJECT_NAME} PUBLIC ${engineIncludeDirs})
 # target_include_directories(${PROJECT_NAME} PUBLIC ${vkEngineIncludeDirs})
 
-target_link_libraries(${PROJECT_NAME} glfw libglew_static shaders)
+target_link_libraries(${PROJECT_NAME} glfw libglew_static shaders engine)
 
 message(STATUS "test")
 

@@ -90,6 +90,10 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_Q && action == GLFW_REPEAT) {
         Camera::mainCamera.rotate(-0.01f, glm::vec3(0.0, 0.0, 1.0));
+    } else if (key == GLFW_KEY_Y && action == GLFW_REPEAT) {
+        Camera::mainCamera.scale(glm::vec3(1.01, 1.01, 1.0));
+    } else if (key == GLFW_KEY_H && action == GLFW_REPEAT) {
+        Camera::mainCamera.scale(glm::vec3(0.99, 0.99, 1.0));
     }
 }
 

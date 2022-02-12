@@ -1,4 +1,4 @@
 #include "functions.hpp"
 
-class GameObject {
-};
+class Material {
+}

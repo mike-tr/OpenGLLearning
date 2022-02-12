@@ -1,7 +1,7 @@
-set(proj shaders)
+set(proj engine)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/shaders.cpp)
+add_library(${proj} src/material.cpp src/functions.cpp src/gameObject.cpp src/camera.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)
@@ -10,7 +10,8 @@ target_include_directories(${proj} PUBLIC src/headers)
 target_include_directories(${proj}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glew/include
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
-    PRIVATE ${PROJECT_SOURCE_DIR}/external/glm/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
+    PUBLIC ${PROJECT_SOURCE_DIR}/external/headers
 )
 
 # add dependencies to this subproject
