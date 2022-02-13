@@ -1,7 +1,7 @@
 set(proj shaders)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/shaders.cpp)
+add_library(${proj} src/empty.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)

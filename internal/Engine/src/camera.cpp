@@ -21,7 +21,7 @@ void Camera::scale(glm::vec3 scale) {
     this->recalculate();
 }
 
-void Camera::apply(unsigned int shader) {
+void Camera::apply(unsigned int shader) const {
     unsigned int transformLoc = glGetUniformLocation(shader, "camera");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
 }

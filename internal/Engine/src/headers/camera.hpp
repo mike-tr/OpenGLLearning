@@ -13,7 +13,7 @@ public:
     Camera(glm::vec3 startPos);
     void rotate(float degree, glm::vec3 axis);
     void scale(glm::vec3 scale);
-    void apply(unsigned int shader);
+    void apply(unsigned int shader) const;
     void recalculate();
     void localTranslate(glm::vec3 translate);
     void globalTranslate(glm::vec3 translate);

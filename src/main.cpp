@@ -1,5 +1,6 @@
 // #define GLEW_STATIC
 #include "camera.hpp"
+#include "gameObject.hpp"
 #include "math.h"
 #include "shaders.hpp"
 #include <iomanip>
@@ -106,7 +107,7 @@ int main(void) {
     unsigned int mainTex = create_texture("assets/images/brick.jpg");
     unsigned int blendTex = create_texture("assets/images/rabbit.jpg");
     unsigned int normalTex = create_texture("assets/images/normalmap.jpg");
-
+    unsigned int mainTex2 = create_texture("assets/images/skeletor.jpg");
     // Set blend tex as uint 1.
     ourShader.use();
     ourShader.setInt("blendTex", 1);
@@ -128,6 +129,31 @@ int main(void) {
     vec.y += 1;
     std::cout << "( " << vec.x << ", " << vec.y << ", " << vec.z << " )" << std::endl;
 
+    Material mat = Material(ourShader);
+    GameObject obj[] = {GameObject(VAO, 6, mat), GameObject(VAO, 6, mat), GameObject(VAO, 6, mat)};
+
+    obj[0].setPosition(glm::vec3(0.5f, -0.5f, 0.0f));
+    obj[0].localScale(glm::vec3(0.5f, 0.5f, 1.0f));
+    obj[0].rotate(0.1, glm::vec3(0.0, 0.0, 1.0));
+
+    obj[1].setPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+    obj[1].localScale(glm::vec3(0.33f, 0.33f, 1.0f));
+    obj[1].rotate(-0.1, glm::vec3(0.0, 0.0, 1.0));
+
+    obj[2].localScale(glm::vec3(0.75f, 0.75f, 1.0f));
+
+    for (unsigned int i = 0; i < 3; i++) {
+        obj[i].getMaterial().setFloat("time", 1);
+        obj[i].getMaterial().setFloat("offset", 1);
+        obj[i].getMaterial().setTexture("mainTex", 0, mainTex);
+        obj[i].getMaterial().setTexture("blendTex", 1, blendTex);
+        obj[i].getMaterial().setTexture("normalTex", 2, normalTex);
+    }
+
+    obj[2].getMaterial().setTexture("blendTex", 1, mainTex2);
+    obj[1].getMaterial().setTexture("blendTex", 1, normalTex);
+
+    cout << "start while" << endl;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
 
@@ -141,53 +167,69 @@ int main(void) {
         // glVertex2f(0.5f, -0.5f);
         // glEnd();
 
-        float timeValue = glfwGetTime();
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        // cout << greenValue << endl;
-        // int vertexColorLocation = glGetUniformLocation(ourShader.ID, "ourColor");
-        ourShader.use();
-        // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-        ourShader.setFloat("time", greenValue);
-        ourShader.setFloat("offset", greenValue);
+        // float timeValue = glfwGetTime();
+        // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+        // // cout << greenValue << endl;
+        // // int vertexColorLocation = glGetUniformLocation(ourShader.ID, "ourColor");
+        // ourShader.use();
+        // // // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        // ourShader.setFloat("time", greenValue);
+        // ourShader.setFloat("offset", greenValue);
 
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, -0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+        // glm::mat4 trans = glm::mat4(1.0f);
+        // trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        // trans = glm::rotate(trans, -0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+        // unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+        // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
-        Camera::mainCamera.apply(ourShader.ID);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mainTex);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, blendTex);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normalTex);
-        glBindVertexArray(VAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
+        // Camera::mainCamera.apply(ourShader.ID);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, mainTex);
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, blendTex);
+        // glActiveTexture(GL_TEXTURE2);
+        // glBindTexture(GL_TEXTURE_2D, normalTex);
+        // glBindVertexArray(VAO);
+        // // glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-        trans = glm::rotate(trans, 0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+        // trans = glm::mat4(1.0f);
+        // trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+        // trans = glm::rotate(trans, 0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+        // transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+        // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
-        Camera::mainCamera.apply(ourShader.ID);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mainTex);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, blendTex);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normalTex);
-        glBindVertexArray(VAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
+        // Camera::mainCamera.apply(ourShader.ID);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, mainTex);
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, blendTex);
+        // glActiveTexture(GL_TEXTURE2);
+        // glBindTexture(GL_TEXTURE_2D, normalTex);
+        // glBindVertexArray(VAO);
+        // // glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // ourShader.use();
+        for (int i = 0; i < 3; i++) {
+            glm::vec3 t = glm::vec3(0.001 * (1 - i), 0.001 * (2 - i), 0.0);
+            obj[i].localTranslate(t);
+            glm::vec3 axis = glm::vec3(0.0, 0.0, 0.0);
+            if (i == 0) {
+                axis.x = 1;
+            } else if (i == 1) {
+                axis.y = 1;
+            } else {
+                axis.z = 1;
+            }
+            obj[i].rotate(0.005 * (i + 1), axis);
+            obj[i].draw(Camera::mainCamera);
+        }
+        // obj[1].draw(Camera::mainCamera);
+        // obj[2].draw(Camera::mainCamera);
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
