@@ -1,9 +1,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "camera.hpp"
+#include "etime.hpp"
 
 using namespace std;
 
 #define ENDING 4
+#define SPEED 5.0f
 
 bool wireframe = false;
 
@@ -34,6 +36,12 @@ glm::vec3 operator-(const glm::vec3 &base, const glm::vec4 &other) {
     n.z -= no.z;
     return n;
 }
+
+glm::vec3 operator*(const glm::mat4 &mat, const glm::vec3 &vec) {
+    auto v4 = glm::vec4(vec, 1);
+    auto mv = mat * v4;
+    return mv / mv.w;
+}
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
@@ -51,50 +59,90 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     } else if (key == GLFW_KEY_W && action == GLFW_REPEAT) {
-        Camera::mainCamera.localTranslate(glm::vec3(0.0, 1.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * 0.01f;
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, 1.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * SPEED;
         // cout << Camera::mainCamera.position.x << ", " << Camera::mainCamera.position.y << ", "
         //      << Camera::mainCamera.position.z << endl;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_S && action == GLFW_REPEAT) {
-        Camera::mainCamera.localTranslate(glm::vec3(0.0, -1.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * 0.01f;
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, -1.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_D && action == GLFW_REPEAT) {
-        Camera::mainCamera.localTranslate(glm::vec3(1.0, 0.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * 0.01f;
+        Camera::mainCamera.localTranslate(glm::vec3(1.0, 0.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_A && action == GLFW_REPEAT) {
-        Camera::mainCamera.localTranslate(glm::vec3(-1.0, 0.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * 0.01f;
+        Camera::mainCamera.localTranslate(glm::vec3(-1.0, 0.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_E && action == GLFW_REPEAT) {
-        Camera::mainCamera.rotate(0.01f, glm::vec3(0.0, 0.0, 1.0));
+        Camera::mainCamera.rollRotate(SPEED * 90 * ETime::deltaTime);
     } else if (key == GLFW_KEY_UP && action == GLFW_REPEAT) {
-        Camera::mainCamera.globalTranslate(glm::vec3(0.0, 1.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * 0.01f;
+        Camera::mainCamera.globalTranslate(glm::vec3(0.0, 1.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(0.0, 1.0, 0.0) * SPEED;
         // cout << Camera::mainCamera.position.x << ", " << Camera::mainCamera.position.y << ", "
         //      << Camera::mainCamera.position.z << endl;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT) {
-        Camera::mainCamera.globalTranslate(glm::vec3(0.0, -1.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * 0.01f;
+        Camera::mainCamera.globalTranslate(glm::vec3(0.0, -1.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(0.0, -1.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_RIGHT && action == GLFW_REPEAT) {
-        Camera::mainCamera.globalTranslate(glm::vec3(1.0, 0.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * 0.01f;
+        Camera::mainCamera.globalTranslate(glm::vec3(1.0, 0.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(1.0, 0.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_LEFT && action == GLFW_REPEAT) {
-        Camera::mainCamera.globalTranslate(glm::vec3(-1.0, 0.0, 0.0) * 0.01f);
-        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * 0.01f;
+        Camera::mainCamera.globalTranslate(glm::vec3(-1.0, 0.0, 0.0) * SPEED * ETime::deltaTime);
+        // Camera::mainCamera.position += glm::vec3(-1.0, 0.0, 0.0) * SPEED;
         // Camera::mainCamera.recalculate();
     } else if (key == GLFW_KEY_Q && action == GLFW_REPEAT) {
-        Camera::mainCamera.rotate(-0.01f, glm::vec3(0.0, 0.0, 1.0));
+        Camera::mainCamera.rollRotate(-SPEED * 90 * ETime::deltaTime);
     } else if (key == GLFW_KEY_Y && action == GLFW_REPEAT) {
-        Camera::mainCamera.scale(glm::vec3(1.01, 1.01, 1.0));
+        Camera::mainCamera.scale(glm::vec3(1.0, 1.0, 1.0) * (1 + SPEED * ETime::deltaTime));
     } else if (key == GLFW_KEY_H && action == GLFW_REPEAT) {
-        Camera::mainCamera.scale(glm::vec3(0.99, 0.99, 1.0));
+        Camera::mainCamera.scale(glm::vec3(1.0, 1.0, 1.0) * (1 - SPEED * ETime::deltaTime));
+    } else if (key == GLFW_KEY_Z && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, 0.0, 1.0) * SPEED * ETime::deltaTime);
+    } else if (key == GLFW_KEY_X && action == GLFW_REPEAT) {
+        Camera::mainCamera.localTranslate(glm::vec3(0.0, 0.0, -1.0) * SPEED * ETime::deltaTime);
+        cout << Camera::mainCamera.getPos() << endl;
+    } else if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+        if (Camera::mainCamera.getProjectionMode() == Camera::Mode::orthographic) {
+            Camera::mainCamera.setProjectionMode(Camera::Mode::perspective);
+        } else {
+            Camera::mainCamera.setProjectionMode(Camera::Mode::orthographic);
+        }
+    } else if (key == GLFW_KEY_F && action == GLFW_REPEAT) {
+        Camera::mainCamera.lookAt(glm::vec3(0.0, 0.0, 0.0));
+        cout << Camera::mainCamera.up();
+        cout << "look at" << endl;
     }
+}
+
+bool initialized = false;
+double prevX = -1, prevY = -1;
+void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+    if (initialized == false) {
+        initialized = true;
+        prevX = xpos;
+        prevY = ypos;
+        return;
+    }
+
+    double offsetX = prevX - xpos;
+    double offsetY = prevY - ypos;
+
+    prevX = xpos;
+    prevY = ypos;
+    if (abs(offsetX) < 0.1f) {
+        return;
+    }
+
+    Camera::mainCamera.yawRotate(ETime::deltaTime * -offsetX);
+    Camera::mainCamera.pitchRotate(ETime::deltaTime * -offsetY);
+    // Camera::mainCamera.rollRotate(ETime::deltaTime, glm::vec3(-offsetY, -offsetX, 0.0));
+    //  cout << offsetX << " : " << offsetY << endl;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -214,4 +262,140 @@ unsigned int create_texture(const char *imagePath) {
     stbi_image_free(data);
 
     return texture;
+}
+
+unsigned int create_cube() {
+    unsigned int indices[36];
+    unsigned int mapping[] = {0, 1, 2, 2, 3, 0};
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            indices[i * 6 + j] = 4 * i + mapping[j];
+            // cout << i * 6 + j << " : " << mapping[j] << endl;
+        }
+    }
+
+    // 0->0, 1->1, 2->2, 3->2, 4->3, 5->1
+
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f};
+
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+
+    // Generate a vertex array object
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+
+    // 1. bind Vertex Array Object
+    glBindVertexArray(VAO);
+
+    // 2. copy our vertices array in a buffer for OpenGL to use
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // copy indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    return VAO;
+}
+
+unsigned int create_cube_bad() {
+
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // 0
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // 1
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,   // 2
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,   // 2
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,  // 3
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // 0
+
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
+
+    unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    // 2. copy our vertices array in a buffer for OpenGL to use
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    return VAO;
 }

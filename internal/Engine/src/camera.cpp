@@ -1,16 +1,64 @@
 #include "camera.hpp"
 
-Camera Camera::mainCamera = Camera(glm::vec3(0.0, 0.0, 0.0));
+#define PI 3.14159265359f
 
-Camera::Camera(glm::vec3 startPos) {
+Camera Camera::mainCamera = Camera(glm::vec3(0.0, 0.0, 3.0), Camera::Mode::perspective);
+
+Camera::Camera(glm::vec3 startPos, Mode projection) {
     this->position = startPos;
-    this->rotationMatrix = glm::mat4(1.0f);
+    this->rollMatrix = glm::mat4(1.0f);
     this->scaleV = glm::vec3(1.0, 1.0, 1.0);
+    this->setProjectionMode(projection);
+    this->lookAt(glm::vec3(0.0, 0.0, 0.0));
+    std::cout << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
     this->recalculate();
 }
 
-void Camera::rotate(float radians, glm::vec3 axis) {
-    this->rotationMatrix = glm::rotate(this->rotationMatrix, radians, axis);
+void Camera::setProjectionMode(Mode mode) {
+    this->projectionMode = mode;
+    if (this->projectionMode == Mode::perspective) {
+        this->projectionMatrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    } else if (this->projectionMode == Mode::orthographic) {
+        this->projectionMatrix = glm::ortho(-2.0f, +2.0f, -1.5f, +1.5f, 0.1f, 100.0f);
+        // this->projectionMatrix = glm::mat4(1.0f);
+    }
+}
+
+Camera::Mode Camera::getProjectionMode() {
+    return this->projectionMode;
+}
+
+void Camera::rollRotate(float degree) {
+    this->roll += degree;
+    auto axis = glm::vec3(0.0, 0.0, 1.0);
+    this->rollMatrix = glm::rotate(this->rollMatrix, glm::radians(degree), axis);
+
+    this->recalculate();
+}
+
+void Camera::pitchRotate(float degree) {
+    this->pitch += glm::radians(degree);
+
+    this->forwardAxis.x = cos(yaw) * cos(pitch);
+    this->forwardAxis.y = sin(pitch);
+    this->forwardAxis.z = sin(yaw) * cos(pitch);
+
+    // std::cout << "pich rotate: " << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
+    // std::cout << "actual " << atan(this->forwardAxis.z / this->forwardAxis.y) << ", "
+    //           << atan(this->forwardAxis.y / (this->forwardAxis.x + this->forwardAxis.z)) << std::endl;
+    this->recalculate();
+}
+
+void Camera::yawRotate(float degree) {
+    this->yaw += glm::radians(degree);
+
+    this->forwardAxis.x = cos(yaw) * cos(pitch);
+    this->forwardAxis.y = sin(pitch);
+    this->forwardAxis.z = sin(yaw) * cos(pitch);
+
+    // std::cout << "yaw rotate: " << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
+    // std::cout << "actual " << atan(this->forwardAxis.z / this->forwardAxis.y) << ", "
+    //           << atan(this->forwardAxis.y / (this->forwardAxis.x + this->forwardAxis.z)) << std::endl;
     this->recalculate();
 }
 
@@ -22,28 +70,85 @@ void Camera::scale(glm::vec3 scale) {
 }
 
 void Camera::apply(unsigned int shader) const {
-    unsigned int transformLoc = glGetUniformLocation(shader, "camera");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
+    unsigned int viewLoc = glGetUniformLocation(shader, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(this->viewMatrix));
+    unsigned int projectionLoc = glGetUniformLocation(shader, "projection");
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
 }
 
 void Camera::recalculate() {
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = trans * this->rotationMatrix;
-    trans = glm::translate(trans, -this->position);
-    trans = glm::scale(trans, this->scaleV);
+    // glm::mat4 trans = glm::mat4(1.0f);
+    // trans = trans * this->rotationMatrix;
+    // trans = glm::translate(trans, -this->position);
+    // trans = glm::scale(trans, this->scaleV);
 
-    this->transformationMatrix = trans;
+    // this->viewMatrix = trans;
+    this->viewMatrix = this->rollMatrix * glm::lookAt(this->position, this->position - this->forwardAxis, this->up());
+    this->viewMatrix = glm::scale(this->viewMatrix, this->scaleV);
+    // std::cout << upAxis << " : " << this->up() << std::endl;
 }
 
 void Camera::localTranslate(glm::vec3 translate) {
-    glm::vec4 t = glm::vec4(translate, 1.0f);
-    this->position = this->position + glm::inverse(this->rotationMatrix) * t;
+    // glm::vec4 t = glm::vec4(translate, 1.0f);
+    // this->position = this->position + glm::inverse(this->rotationMatrix) * t;
+    // auto z = translate.z;
+    // auto vz = glm::vec3(0.0f, 0.0f, 0.0f);
+    // if (abs(translate.z) > 0.01) {
+    //     vz = glm::inverse(glm::lookAt(this->position, this->position - this->forwardAxis, this->up())) * glm::vec3(0.0, 0.0, translate.z);
+    // }
+    // std::cout << vz << std::endl;
+    // translate.z = 0;
+    // auto vv = this->rotationMatrix * translate;
+
+    translate = glm::inverse(this->rollMatrix) * translate;
+    this->position += translate.x * this->right() + translate.y * this->up() + translate.z * this->forward();
+    std::cout << this->position << std::endl;
     this->recalculate();
 }
 
 void Camera::globalTranslate(glm::vec3 translate) {
     this->position += translate;
     this->recalculate();
+}
+
+void Camera::lookAt(glm::vec3 targetPos) {
+    // this->upAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+    // this->upAxis = this->rotationMatrix * this->upAxis;
+    // this->rollMatrix = glm::mat4(1.0f);
+    this->forwardAxis = glm::normalize(this->position - targetPos);
+
+    // yaw is Z->up and x->right
+    // angle = tan-1(up/right)
+    if (abs(forwardAxis.x) > 0.01f) {
+        this->yaw = atan(this->forwardAxis.z / this->forwardAxis.x);
+    } else {
+        this->yaw = PI / 2;
+    }
+
+    float xz = this->forwardAxis.x + this->forwardAxis.y;
+    if (abs(xz) > 0.01f) {
+        this->pitch = atan(this->forwardAxis.y / xz);
+    } else {
+        this->pitch = PI / 2;
+    }
+    // std::cout << "ff" << forwardAxis << ": " << this->position << std::endl;
+    // std::cout << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
+
+    // auto test = glm::vec3(cos(yaw) * cos(pitch), sin(pitch), sin(yaw) * cos(pitch));
+    // std::cout << "recalculated " << test << std::endl;
+    this->recalculate();
+}
+
+glm::vec3 Camera::right() {
+    return glm::normalize(glm::cross(this->upAxis, this->forwardAxis));
+}
+
+glm::vec3 Camera::up() {
+    return glm::cross(this->forwardAxis, this->right());
+}
+
+glm::vec3 Camera::forward() {
+    return this->forwardAxis;
 }
 
 glm::vec3 Camera::getPos() {

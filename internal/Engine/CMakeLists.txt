@@ -1,7 +1,7 @@
 set(proj engine)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/material.cpp src/functions.cpp src/gameObject.cpp src/camera.cpp src/shaders.cpp)
+add_library(${proj} src/material.cpp src/functions.cpp src/gameObject.cpp src/camera.cpp src/shaders.cpp src/etime.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)

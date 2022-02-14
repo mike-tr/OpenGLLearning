@@ -1,11 +1,12 @@
 #include "gameObject.hpp"
 
-GameObject::GameObject(unsigned int model, unsigned int numVertices, const Material &material) : material(material) {
+GameObject::GameObject(unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material) {
     this->object = model;
     this->numVertices = numVertices;
     this->position = glm::vec3(0.0, 0.0, 0.0);
     this->rotationMatrix = glm::mat4(1.0f);
     this->scaleV = glm::vec3(1.0, 1.0, 1.0);
+    this->indexed = indexed;
     this->recalculate();
 }
 
@@ -24,7 +25,11 @@ void GameObject::draw(const Camera &camera) {
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
 
     glBindVertexArray(this->object);
-    glDrawElements(GL_TRIANGLES, this->numVertices, GL_UNSIGNED_INT, 0);
+    if (indexed) {
+        glDrawElements(GL_TRIANGLES, this->numVertices, GL_UNSIGNED_INT, 0);
+        return;
+    }
+    glDrawArrays(GL_TRIANGLES, 0, this->numVertices);
 }
 
 glm::vec3 GameObject::getPosition() {

@@ -14,11 +14,16 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 unsigned int load_shaders();
+unsigned int create_cube();
+unsigned int create_cube_bad();
 void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 unsigned int create_texture(const char *imagePath);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
 std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec);
 std::ostream &operator<<(std::ostream &os, const glm::vec3 &vec);
 glm::vec3 operator+(const glm::vec3 &base, const glm::vec4 &other);
 glm::vec3 operator-(const glm::vec3 &base, const glm::vec4 &other);
+
+glm::vec3 operator*(const glm::mat4 &mat, const glm::vec3 &vec);

@@ -1,5 +1,6 @@
 // #define GLEW_STATIC
 #include "camera.hpp"
+#include "etime.hpp"
 #include "gameObject.hpp"
 #include "math.h"
 #include "shaders.hpp"
@@ -15,7 +16,7 @@ int main(void) {
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -30,6 +31,9 @@ int main(void) {
     }
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetKeyCallback(window, key_callback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
 
     cout << glGetString(GL_VERSION) << endl;
 
@@ -61,8 +65,8 @@ int main(void) {
     // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // tell how to draw the data.
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    // glEnableVertexAttribArray(0);
 
     // indicies object
     unsigned int EBO;
@@ -129,18 +133,22 @@ int main(void) {
     vec.y += 1;
     std::cout << "( " << vec.x << ", " << vec.y << ", " << vec.z << " )" << std::endl;
 
-    Material mat = Material(ourShader);
-    GameObject obj[] = {GameObject(VAO, 6, mat), GameObject(VAO, 6, mat), GameObject(VAO, 6, mat)};
+    unsigned int cube = create_cube_bad();
+    unsigned int cubeb = create_cube();
 
-    obj[0].setPosition(glm::vec3(0.5f, -0.5f, 0.0f));
-    obj[0].localScale(glm::vec3(0.5f, 0.5f, 1.0f));
+    Material mat = Material(ourShader);
+    GameObject obj[] = {GameObject(cube, 36, false, mat), GameObject(cube, 36, false, mat), GameObject(cubeb, 36, true, mat)};
+
+    obj[0].setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
+    obj[0].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);
     obj[0].rotate(0.1, glm::vec3(0.0, 0.0, 1.0));
 
-    obj[1].setPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-    obj[1].localScale(glm::vec3(0.33f, 0.33f, 1.0f));
+    obj[1].setPosition(glm::vec3(0.5f, 0.5f, -1.0f));
+    obj[1].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.33f);
     obj[1].rotate(-0.1, glm::vec3(0.0, 0.0, 1.0));
 
-    obj[2].localScale(glm::vec3(0.75f, 0.75f, 1.0f));
+    obj[2].setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    obj[2].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.1f);
 
     for (unsigned int i = 0; i < 3; i++) {
         obj[i].getMaterial().setFloat("time", 1);
@@ -153,77 +161,33 @@ int main(void) {
     obj[2].getMaterial().setTexture("blendTex", 1, mainTex2);
     obj[1].getMaterial().setTexture("blendTex", 1, normalTex);
 
+    glEnable(GL_DEPTH_TEST);
     cout << "start while" << endl;
+    Camera::mainCamera.lookAt(glm::vec3(0.0, 0.0, 0.0));
+
+    ETime::update();
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-
+        ETime::update();
         processInput(window);
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        // glBegin(GL_TRIANGLES);
-        // glVertex2f(-0.5f, -0.5f);
-        // glVertex2f(.0f, 0.5f);
-        // glVertex2f(0.5f, -0.5f);
-        // glEnd();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // float timeValue = glfwGetTime();
-        // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        // // cout << greenValue << endl;
-        // // int vertexColorLocation = glGetUniformLocation(ourShader.ID, "ourColor");
-        // ourShader.use();
-        // // // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-        // ourShader.setFloat("time", greenValue);
-        // ourShader.setFloat("offset", greenValue);
-
-        // glm::mat4 trans = glm::mat4(1.0f);
-        // trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        // trans = glm::rotate(trans, -0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-        // unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
-        // Camera::mainCamera.apply(ourShader.ID);
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, mainTex);
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, blendTex);
-        // glActiveTexture(GL_TEXTURE2);
-        // glBindTexture(GL_TEXTURE_2D, normalTex);
-        // glBindVertexArray(VAO);
-        // // glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        // trans = glm::mat4(1.0f);
-        // trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-        // trans = glm::rotate(trans, 0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-        // transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
-        // Camera::mainCamera.apply(ourShader.ID);
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, mainTex);
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, blendTex);
-        // glActiveTexture(GL_TEXTURE2);
-        // glBindTexture(GL_TEXTURE_2D, normalTex);
-        // glBindVertexArray(VAO);
-        // // glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // ourShader.use();
         for (int i = 0; i < 3; i++) {
             glm::vec3 t = glm::vec3(0.001 * (1 - i), 0.001 * (2 - i), 0.0);
-            obj[i].localTranslate(t);
+            if (i != 2) {
+                obj[i].localTranslate(t);
+            }
             glm::vec3 axis = glm::vec3(0.0, 0.0, 0.0);
             if (i == 0) {
-                axis.x = 1;
+                axis.x = sqrt(2);
+                axis.y = sqrt(2);
             } else if (i == 1) {
                 axis.y = 1;
             } else {
-                axis.z = 1;
+                axis.x = -sqrt(2);
+                axis.z = sqrt(2);
             }
             obj[i].rotate(0.005 * (i + 1), axis);
             obj[i].draw(Camera::mainCamera);

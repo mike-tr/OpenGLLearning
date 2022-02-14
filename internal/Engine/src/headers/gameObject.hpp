@@ -11,9 +11,10 @@ private:
     glm::vec3 scaleV;
     glm::mat4 transformationMatrix;
     glm::vec3 position;
+    bool indexed;
 
 public:
-    GameObject(unsigned int model, unsigned int numVertices, const Material &material);
+    GameObject(unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
     void draw(const Camera &camera);
     glm::vec3 getPosition();
     Material &getMaterial();
