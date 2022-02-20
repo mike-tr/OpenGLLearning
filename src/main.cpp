@@ -108,6 +108,7 @@ int main(void) {
     glEnableVertexAttribArray(2);
 
     Shader ourShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
+    Shader sphereShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
     unsigned int mainTex = create_texture("assets/images/brick.jpg");
     unsigned int blendTex = create_texture("assets/images/rabbit.jpg");
     unsigned int normalTex = create_texture("assets/images/normalmap.jpg");

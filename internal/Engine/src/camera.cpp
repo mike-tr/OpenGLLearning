@@ -125,17 +125,17 @@ void Camera::lookAt(glm::vec3 targetPos) {
         this->yaw = PI / 2;
     }
 
-    float xz = this->forwardAxis.x + this->forwardAxis.y;
+    float xz = this->forwardAxis.x + this->forwardAxis.z;
     if (abs(xz) > 0.01f) {
         this->pitch = atan(this->forwardAxis.y / xz);
     } else {
         this->pitch = PI / 2;
     }
-    // std::cout << "ff" << forwardAxis << ": " << this->position << std::endl;
-    // std::cout << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
+    std::cout << "ff" << forwardAxis << ": " << this->position << std::endl;
+    std::cout << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
 
-    // auto test = glm::vec3(cos(yaw) * cos(pitch), sin(pitch), sin(yaw) * cos(pitch));
-    // std::cout << "recalculated " << test << std::endl;
+    auto test = glm::vec3(cos(yaw) * cos(pitch), sin(pitch), sin(yaw) * cos(pitch));
+    std::cout << "recalculated " << test << std::endl;
     this->recalculate();
 }
 
