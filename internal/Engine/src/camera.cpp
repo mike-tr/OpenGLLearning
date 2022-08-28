@@ -38,23 +38,22 @@ void Camera::rollRotate(float degree) {
 
 void Camera::pitchRotate(float degree) {
     this->pitch += glm::radians(degree);
-
-    this->forwardAxis.x = cos(yaw) * cos(pitch);
-    this->forwardAxis.y = sin(pitch);
-    this->forwardAxis.z = sin(yaw) * cos(pitch);
-
-    // std::cout << "pich rotate: " << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
-    // std::cout << "actual " << atan(this->forwardAxis.z / this->forwardAxis.y) << ", "
-    //           << atan(this->forwardAxis.y / (this->forwardAxis.x + this->forwardAxis.z)) << std::endl;
-    this->recalculate();
+    this->updateYawAndPitch();
 }
 
 void Camera::yawRotate(float degree) {
     this->yaw += glm::radians(degree);
+    this->updateYawAndPitch();
+}
+
+void Camera::updateYawAndPitch() {
+    this->forwardAxis = this->rollMatrix * this->forwardAxis;
 
     this->forwardAxis.x = cos(yaw) * cos(pitch);
     this->forwardAxis.y = sin(pitch);
     this->forwardAxis.z = sin(yaw) * cos(pitch);
+
+    this->forwardAxis = glm::inverse(this->rollMatrix) * this->forwardAxis;
 
     // std::cout << "yaw rotate: " << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
     // std::cout << "actual " << atan(this->forwardAxis.z / this->forwardAxis.y) << ", "
@@ -88,7 +87,7 @@ void Camera::recalculate() {
     // std::cout << upAxis << " : " << this->up() << std::endl;
 }
 
-void Camera::localTranslate(glm::vec3 translate) {
+void Camera::globalTranslate(glm::vec3 translate) {
     // glm::vec4 t = glm::vec4(translate, 1.0f);
     // this->position = this->position + glm::inverse(this->rotationMatrix) * t;
     // auto z = translate.z;
@@ -106,7 +105,7 @@ void Camera::localTranslate(glm::vec3 translate) {
     this->recalculate();
 }
 
-void Camera::globalTranslate(glm::vec3 translate) {
+void Camera::localTranslate(glm::vec3 translate) {
     this->position += translate;
     this->recalculate();
 }

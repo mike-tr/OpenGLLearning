@@ -37,76 +37,6 @@ int main(void) {
 
     cout << glGetString(GL_VERSION) << endl;
 
-    // DRAW A RECTANGLE
-
-    // create vertex data
-    float vertices[] = {
-        // positions          // colors           // texture coords
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
-    };
-
-    unsigned int indices[] = {
-        // note that we start from 0!
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
-
-    // create object
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-
-    // // set object as GL_ARRAYP_BUFFER
-    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    // // bind vertices to the object
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // tell how to draw the data.
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    // glEnableVertexAttribArray(0);
-
-    // indicies object
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-
-    // load shaders
-    // unsigned int shaderProgram = load_shaders();
-    // glUseProgram(shaderProgram);
-
-    // Generate a vertex array object
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
-    // ..:: Initialization code (done once (unless your object frequently changes)) :: ..
-    // 1. bind Vertex Array Object
-    glBindVertexArray(VAO);
-    // 2. copy our vertices array in a buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // copy indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // 3. then set our vertex attributes pointers
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    // glEnableVertexAttribArray(0);
-
-    // position attribute
-    // the first value is the arrtibute array i.e location = 0, the second is the vector length in this case 3.
-    // then the type, and if its need to be notmalized, next the size of each "block", in this case we have 6 values.
-    // last the offset, so to get position we start at index 0, as for colors we start from 3.
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
     Shader ourShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
     Shader sphereShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
     unsigned int mainTex = create_texture("assets/images/brick.jpg");
@@ -117,6 +47,9 @@ int main(void) {
     ourShader.use();
     ourShader.setInt("blendTex", 1);
     ourShader.setInt("normalTex", 2);
+
+    Shader GroundShader = Shader("assets/shaders/shader.vs", "assets/shaders/ground.fs");
+    GroundShader.setVec4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
 
     // unsigned int shaderProgram = load_shaders();
     // glUseProgram(shaderProgram);
@@ -138,7 +71,8 @@ int main(void) {
     unsigned int cubeb = create_cube();
 
     Material mat = Material(ourShader);
-    GameObject obj[] = {GameObject(cube, 36, false, mat), GameObject(cube, 36, false, mat), GameObject(cubeb, 36, true, mat)};
+    GameObject obj[] = {GameObject(cubeb, 36, true, mat), GameObject(cubeb, 36, true, mat), GameObject(cubeb, 36, true, mat)};
+    GameObject ground = GameObject(cubeb, 36, true, mat);
 
     obj[0].setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
     obj[0].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);
@@ -164,13 +98,14 @@ int main(void) {
 
     glEnable(GL_DEPTH_TEST);
     cout << "start while" << endl;
+    cout << "teetete" << endl;
     Camera::mainCamera.lookAt(glm::vec3(0.0, 0.0, 0.0));
 
     ETime::update();
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         ETime::update();
-        processInput(window);
+        // processInput(window);
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -204,8 +139,8 @@ int main(void) {
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    // glDeleteVertexArrays(1, &VAO);
+    // glDeleteBuffers(1, &VBO);
     // glDeleteProgram(shaderProgram);
 
     glfwTerminate();

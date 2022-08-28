@@ -8,6 +8,7 @@ using namespace std;
 #define SPEED 5.0f
 
 bool wireframe = false;
+bool mouse_enabled = false;
 
 std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec) {
     os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
@@ -47,11 +48,17 @@ glm::vec3 operator*(const glm::mat4 &mat, const glm::vec3 &vec) {
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+        cout << "process input..." << endl;
     }
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        // glfwSetWindowShouldClose(window, true);
+        mouse_enabled = !mouse_enabled;
+        glfwSetInputMode(window, GLFW_CURSOR, (!mouse_enabled) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+        // cout << "escape was pressed mouse : " << mouse_enabled << endl;
+    } else if (key == GLFW_KEY_T && action == GLFW_PRESS) {
         wireframe = !wireframe;
         if (wireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -20,6 +20,8 @@ private:
     Mode projectionMode;
     float yaw, pitch, roll;
 
+    void updateYawAndPitch();
+
 public:
     static Camera mainCamera;
     Camera(glm::vec3 startPos, Mode projectionMode);
