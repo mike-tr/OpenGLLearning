@@ -87,7 +87,7 @@ void Camera::recalculate() {
     // std::cout << upAxis << " : " << this->up() << std::endl;
 }
 
-void Camera::globalTranslate(glm::vec3 translate) {
+void Camera::localTranslate(glm::vec3 translate) {
     // glm::vec4 t = glm::vec4(translate, 1.0f);
     // this->position = this->position + glm::inverse(this->rotationMatrix) * t;
     // auto z = translate.z;
@@ -105,7 +105,7 @@ void Camera::globalTranslate(glm::vec3 translate) {
     this->recalculate();
 }
 
-void Camera::localTranslate(glm::vec3 translate) {
+void Camera::globalTranslate(glm::vec3 translate) {
     this->position += translate;
     this->recalculate();
 }

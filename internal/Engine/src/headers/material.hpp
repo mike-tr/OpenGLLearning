@@ -12,6 +12,7 @@ private:
     std::map<std::string, float> floatUniforms;
     std::map<std::string, bool> boolUniforms;
     std::map<int, int> textures;
+    std::map<std::string, glm::vec4> fv4s;
     friend class GameObject;
 
 public:
@@ -22,5 +23,6 @@ public:
     void setInt(const std::string &name, int value);
     void setFloat(const std::string &name, float value);
     void setTexture(std::string textureName, unsigned int textureUint, unsigned int textureID);
+    void setFv4(const std::string &name, float v1, float v2, float v3, float v4);
     void use();
 };

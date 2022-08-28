@@ -49,7 +49,7 @@ int main(void) {
     ourShader.setInt("normalTex", 2);
 
     Shader GroundShader = Shader("assets/shaders/shader.vs", "assets/shaders/ground.fs");
-    GroundShader.setVec4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
+    // GroundShader.setVec4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
 
     // unsigned int shaderProgram = load_shaders();
     // glUseProgram(shaderProgram);
@@ -72,7 +72,12 @@ int main(void) {
 
     Material mat = Material(ourShader);
     GameObject obj[] = {GameObject(cubeb, 36, true, mat), GameObject(cubeb, 36, true, mat), GameObject(cubeb, 36, true, mat)};
-    GameObject ground = GameObject(cubeb, 36, true, mat);
+    Material groundMaterial = Material(GroundShader);
+    GameObject ground = GameObject(cubeb, 36, true, groundMaterial);
+    ground.setPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+    ground.localScale(glm::vec3(1000.0f, 1.0f, 1000.0f));
+    ground.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
+    ground.getMaterial().setFloat("TestVal", 1.0f);
 
     obj[0].setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
     obj[0].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);
@@ -82,7 +87,7 @@ int main(void) {
     obj[1].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.33f);
     obj[1].rotate(-0.1, glm::vec3(0.0, 0.0, 1.0));
 
-    obj[2].setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    obj[2].setPosition(glm::vec3(0.0f, 1.0f, 0.0f));
     obj[2].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.1f);
 
     for (unsigned int i = 0; i < 3; i++) {
@@ -128,6 +133,7 @@ int main(void) {
             obj[i].rotate(0.005 * (i + 1), axis);
             obj[i].draw(Camera::mainCamera);
         }
+        ground.draw(Camera::mainCamera);
         // obj[1].draw(Camera::mainCamera);
         // obj[2].draw(Camera::mainCamera);
         /* Swap front and back buffers */

@@ -9,6 +9,7 @@ Material::Material(const Material &material) : shader(material.shader) {
     this->floatUniforms.clear();
     this->intUniforms.clear();
     this->textures.clear();
+    this->fv4s.clear();
     for (const auto &pair : material.boolUniforms) {
         boolUniforms[pair.first] = pair.second;
     }
@@ -22,6 +23,9 @@ Material::Material(const Material &material) : shader(material.shader) {
         textures[pair.first] = pair.second;
         // std::cout << pair.first << " ," << pair.second << std::endl;
     }
+    for (const auto &pair : material.fv4s) {
+        fv4s[pair.first] = pair.second;
+    }
 }
 
 void Material::setBool(const std::string &name, bool value) {
@@ -34,6 +38,10 @@ void Material::setInt(const std::string &name, int value) {
 
 void Material::setFloat(const std::string &name, float value) {
     this->floatUniforms[name] = value;
+}
+
+void Material::setFv4(const std::string &name, float v1, float v2, float v3, float v4) {
+    this->fv4s[name] = glm::vec4(v1, v2, v3, v4);
 }
 
 void Material::setTexture(std::string textureName, unsigned int textureUint, unsigned int textureID) {
@@ -58,5 +66,8 @@ void Material::use() {
         glActiveTexture(GL_TEXTURE0 + pair.first);
         glBindTexture(GL_TEXTURE_2D, pair.second);
         // std::cout << pair.first << " ," << pair.second << std::endl;
+    }
+    for (const auto &pair : fv4s) {
+        shader.setVec4(pair.first, pair.second);
     }
 }
