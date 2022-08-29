@@ -1,6 +1,7 @@
 #include "camera.hpp"
 
 #define PI 3.14159265359f
+#define EPSILONE 0.1
 
 Camera Camera::mainCamera = Camera(glm::vec3(0.0, 0.0, 3.0), Camera::Mode::perspective);
 
@@ -29,35 +30,63 @@ Camera::Mode Camera::getProjectionMode() {
 }
 
 void Camera::rollRotate(float degree) {
-    this->roll += degree;
+    this->roll += glm::radians(degree);
     auto axis = glm::vec3(0.0, 0.0, 1.0);
-    this->rollMatrix = glm::rotate(this->rollMatrix, glm::radians(degree), axis);
 
+    auto rdeg = glm::radians(degree);
+    this->rollMatrix = glm::rotate(glm::mat4(1.0f), rdeg, axis) * this->rollMatrix;
+    // glm::rotate(this->rollMatrix, glm::radians(degree), axis);
+    // this->forwardAxis = rt * this->forwardAxis;
+
+    // std::cout << "actuall pitch : " << this->pitch << " | calculated : " << glm::asin(-this->forwardAxis.y) << std::endl;
+    // std::cout << "actual yaw : " << this->yaw << " | calculated : " << atan2(this->forwardAxis.x, -this->forwardAxis.y) << std::endl;
+    // this->pitch = glm::asin(-this->forwardAxis.y);
+    // this->yaw = atan2(this->forwardAxis.x, this->forwardAxis.z);
     this->recalculate();
+    // this->updateYawAndPitch();
 }
 
 void Camera::pitchRotate(float degree) {
-    this->pitch += glm::radians(degree);
+    auto rdeg = glm::radians(degree);
+    auto add_yaw = rdeg * sin(this->roll);
+    auto add_pitch = rdeg * cos(this->roll);
+    this->pitch += add_pitch; // glm::radians(degree);
+    this->yaw += add_yaw;
+
     this->updateYawAndPitch();
 }
 
 void Camera::yawRotate(float degree) {
-    this->yaw += glm::radians(degree);
+    auto rdeg = glm::radians(degree);
+    auto add_yaw = rdeg * cos(this->roll);
+    auto add_pitch = rdeg * sin(this->roll);
+    this->pitch += add_pitch; // glm::radians(degree);
+    this->yaw += add_yaw;
+
     this->updateYawAndPitch();
 }
 
 void Camera::updateYawAndPitch() {
-    this->forwardAxis = this->rollMatrix * this->forwardAxis;
+    // this->forwardAxis = this->rollMatrix * this->forwardAxis;
 
     this->forwardAxis.x = cos(yaw) * cos(pitch);
     this->forwardAxis.y = sin(pitch);
     this->forwardAxis.z = sin(yaw) * cos(pitch);
 
-    this->forwardAxis = glm::inverse(this->rollMatrix) * this->forwardAxis;
+    std::cout << this->pitch << " ," << this->yaw << std::endl;
 
-    // std::cout << "yaw rotate: " << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
-    // std::cout << "actual " << atan(this->forwardAxis.z / this->forwardAxis.y) << ", "
-    //           << atan(this->forwardAxis.y / (this->forwardAxis.x + this->forwardAxis.z)) << std::endl;
+    // std::cout << "pitch : " << this->pitch << " inversed : " << asin(this->forwardAxis.y) << std::endl;
+
+    // double y = this->forwardAxis.y;
+    // if (abs(y) < EPSILONE) {
+    //     y = EPSILONE;
+    // }
+    // std::cout << this->forwardAxis << std::endl;
+    // std::cout << cos(this->pitch) << " : " << this->forwardAxis.z << std::endl;
+    // std::cout << "yaw : " << this->yaw << " inversed : " << asin(cos(this->pitch) / this->forwardAxis.z) << std::endl;
+
+    // this->forwardAxis = glm::inverse(this->rollMatrix) * this->forwardAxis;
+
     this->recalculate();
 }
 
@@ -135,7 +164,8 @@ void Camera::lookAt(glm::vec3 targetPos) {
 
     auto test = glm::vec3(cos(yaw) * cos(pitch), sin(pitch), sin(yaw) * cos(pitch));
     std::cout << "recalculated " << test << std::endl;
-    this->recalculate();
+    this->updateYawAndPitch();
+    // this->recalculate();
 }
 
 glm::vec3 Camera::right() {

@@ -79,6 +79,15 @@ int main(void) {
     ground.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
     ground.getMaterial().setFloat("TestVal", 1.0f);
 
+    GameObject *obj2[8];
+    auto distance = 10.0f;
+    for (size_t i = 0; i < 8; i++) {
+        obj2[i] = new GameObject(cubeb, 36, true, mat);
+        obj2[i]->setPosition(glm::vec3(cos(i * 3.14 / 4), 0, sin(i * 3.14 / 4)) * distance);
+        obj2[i]->localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+        // obj2[i].setPosition(glm::vec3(cos(i * PI)))
+    }
+
     obj[0].setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
     obj[0].localScale(glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);
     obj[0].rotate(0.1, glm::vec3(0.0, 0.0, 1.0));
@@ -134,6 +143,10 @@ int main(void) {
             obj[i].draw(Camera::mainCamera);
         }
         ground.draw(Camera::mainCamera);
+
+        for (size_t i = 0; i < 8; i++) {
+            obj2[i]->draw(Camera::mainCamera);
+        }
         // obj[1].draw(Camera::mainCamera);
         // obj[2].draw(Camera::mainCamera);
         /* Swap front and back buffers */
