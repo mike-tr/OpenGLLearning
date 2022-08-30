@@ -4,6 +4,7 @@
 #include "gameObject.hpp"
 #include "math.h"
 #include "shaders.hpp"
+#include "simpleCamera.hpp"
 #include <iomanip>
 
 using namespace std;
@@ -29,13 +30,18 @@ int main(void) {
     if (err != GLEW_OK) {
         fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
     }
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetKeyCallback(window, key_callback);
+    // glfwSetKeyCallback(window, camera.key_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     glfwSetCursorPosCallback(window, mouse_callback);
 
     cout << glGetString(GL_VERSION) << endl;
+
+    Engine::SimpleCamera camera = Engine::SimpleCamera(glm::vec3(0.0, 0.0, 3.0), glm::vec3(0.0, 0.0, 0.0), Camera::Mode::perspective);
 
     Shader ourShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
     Shader sphereShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
@@ -113,6 +119,9 @@ int main(void) {
     glEnable(GL_DEPTH_TEST);
     cout << "start while" << endl;
     cout << "teetete" << endl;
+
+    // Camera::mainCamera = Camera(glm::vec3(0.0, 0.0, 3.0), Camera::Mode::perspective);
+
     Camera::mainCamera.lookAt(glm::vec3(0.0, 0.0, 0.0));
 
     ETime::update();

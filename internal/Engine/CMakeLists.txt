@@ -1,10 +1,11 @@
 set(proj engine)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/material.cpp src/functions.cpp src/gameObject.cpp src/camera.cpp src/shaders.cpp src/etime.cpp)
+add_library(${proj} src/engine.cpp src/simpleCamera.cpp src/node.cpp src/inputHandler.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)
+#target_include_directories(${proj} PUBLIC ../Engine/src/headers)
 
 # add include directories
 target_include_directories(${proj}
@@ -12,6 +13,9 @@ target_include_directories(${proj}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
     PUBLIC ${PROJECT_SOURCE_DIR}/external/headers
+
+    # Add subdirectories
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Essentials/src/headers
 )
 
 # add dependencies to this subproject

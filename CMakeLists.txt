@@ -47,14 +47,14 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
 )
 
-add_subdirectory(internal/Shaders)
 add_subdirectory(internal/Engine)
+add_subdirectory(internal/Essentials)
 # add_subdirectory(internal/vkEngine)
 target_include_directories(${PROJECT_NAME} PUBLIC ${shadersIncludeDirs})
 target_include_directories(${PROJECT_NAME} PUBLIC ${engineIncludeDirs})
 # target_include_directories(${PROJECT_NAME} PUBLIC ${vkEngineIncludeDirs})
 
-target_link_libraries(${PROJECT_NAME} glfw libglew_static shaders engine)
+target_link_libraries(${PROJECT_NAME} glfw libglew_static engine essentials)
 
 message(STATUS "test")
 
