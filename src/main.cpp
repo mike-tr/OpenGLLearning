@@ -3,6 +3,7 @@
 #include "etime.hpp"
 #include "gameObject.hpp"
 #include "math.h"
+#include "mesh.hpp"
 #include "shaders.hpp"
 #include "simpleCamera.hpp"
 #include <iomanip>
@@ -41,7 +42,7 @@ int main(void) {
 
     cout << glGetString(GL_VERSION) << endl;
 
-    Engine::SimpleCamera camera = Engine::SimpleCamera(glm::vec3(0.0, 0.0, 3.0), glm::vec3(0.0, 0.0, 0.0), Camera::Mode::perspective);
+    // Engine::SimpleCamera camera = Engine::SimpleCamera(glm::vec3(0.0, 0.0, 3.0), glm::vec3(0.0, 0.0, 0.0), Camera::Mode::perspective);
 
     Shader ourShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
     Shader sphereShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
@@ -84,6 +85,8 @@ int main(void) {
     ground.localScale(glm::vec3(1000.0f, 1.0f, 1000.0f));
     ground.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
     ground.getMaterial().setFloat("TestVal", 1.0f);
+
+    // auto testobj = Engine::Components::Mesh(cubeb, 36, true, mat);
 
     GameObject *obj2[8];
     auto distance = 10.0f;

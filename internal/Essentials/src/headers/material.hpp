@@ -5,9 +5,9 @@
 #include <string>
 
 // typedef class GameObject;
+
 class Material {
 private:
-    Shader shader;
     std::map<std::string, int> intUniforms;
     std::map<std::string, float> floatUniforms;
     std::map<std::string, bool> boolUniforms;
@@ -16,6 +16,7 @@ private:
     friend class GameObject;
 
 public:
+    Shader shader;
     // Material(const Material &material);
     Material(const Shader &shader);
     Material(const Material &material);

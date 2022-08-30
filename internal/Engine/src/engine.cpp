@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "inputHandler.hpp"
 
 namespace Engine {
 
@@ -9,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 
 Engine *Engine::instance = NULL;
 
-Engine::Engine(int width, int hight, char *windowName) {
+Engine::Engine(int width, int hight, char *windowName) : input(*this) {
     if (instance != NULL) {
         std::cerr << "Can have only 1 instance of engine running!" << std::endl;
     }
@@ -29,10 +28,6 @@ Engine::Engine(int width, int hight, char *windowName) {
     }
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetKeyCallback(window, InputHandler::key_callback);
-    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    // glfwSetCursorPosCallback(window, mouse_callback);
 
     // cout << glGetString(GL_VERSION) << endl;
 }
@@ -42,17 +37,31 @@ void Engine::exit() {
 }
 
 void Engine::update() {
-
+    input.update_keys();
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-        (*it)->engineUpdate();
+        (*it)->engineUpdate(*this);
     }
 }
 
-void Engine::addNode(Node *node) {
+void Engine::addDrawCall(Components::Mesh &mesh) {
+    // drawcalls.push(mesh);
+}
+
+void Engine::drawcall() {
+    while (!drawcalls.empty()) {
+        auto &mesh = drawcalls.top();
+
+        drawcalls.pop();
+    }
+}
+
+void Engine::addNode(Node::Node *node) {
     nodes.push_back(node);
 }
 
 Engine::~Engine() {
+    InputHandler::exit();
+    glfwTerminate();
 }
 
 Engine &Engine::getEngine() {

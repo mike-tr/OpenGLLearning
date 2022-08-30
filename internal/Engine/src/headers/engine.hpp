@@ -1,5 +1,8 @@
 
 #pragma once
+#include "inputHandler.hpp"
+//#include "mesh.hpp"
+#include "mesh.hpp"
 #include "node.hpp"
 #include "stb_image.h"
 #include <GL/glew.h>
@@ -8,15 +11,25 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <list>
+#include <stack>
+
+// typedef class InputHandler;
 
 namespace Engine {
 class Engine {
 private:
+    friend class InputHandler;
     static Engine *instance;
+    InputHandler input;
     GLFWwindow *window;
 
-    std::list<Node *> nodes;
+    std::list<Node::Node *> nodes;
+    std::stack<Components::Mesh *> drawcalls;
+    // std::stack<Cam>
 
+    void addDrawCall(Components::Mesh &mesh);
+    void drawcall();
     /* data */
 public:
     Engine(int width, int hight, char *windowName);
@@ -24,7 +37,7 @@ public:
     static void exit();
     // Call each frame.
     void update();
-    void addNode(Node *node);
+    void addNode(Node::Node *node);
 
     GLFWwindow &getWindow();
 
