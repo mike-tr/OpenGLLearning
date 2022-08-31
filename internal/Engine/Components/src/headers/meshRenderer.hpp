@@ -1,18 +1,17 @@
 #pragma once
 #define FORWARDS
 #include "component.hpp"
+#include "nodes.fwd.hpp"
 // #include "engine.hpp"
 #include "material.hpp"
 //#include "node.hpp"
-#include "transformNode.hpp"
-
-class Camera;
+//#include "cameraNode.hpp"
+//#include "transformNode.hpp"
 
 namespace Engine {
 class Engine;
-
 namespace Components {
-class Mesh final : Componenet {
+class MeshRenderer final : Componenet {
 private:
     /* data */
     Material material;
@@ -25,9 +24,9 @@ protected:
     void onEngineUpdate(Engine &engine) override;
 
 public:
-    void draw(const Camera &camera);
-    Mesh(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
-    ~Mesh();
+    void draw(const Node::Camera &camera);
+    MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
+    ~MeshRenderer();
     void update() override;
 };
 } // namespace Components

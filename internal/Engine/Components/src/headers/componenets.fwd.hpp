@@ -2,5 +2,5 @@
 
 namespace Engine::Components {
 class Componenet;
-class Mesh;
+class MeshRenderer;
 }

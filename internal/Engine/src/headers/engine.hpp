@@ -1,9 +1,9 @@
 
 #pragma once
 #include "componenets.fwd.hpp"
-
 #include "inputHandler.hpp"
-#include "node.hpp"
+#include "nodes.fwd.hpp"
+
 #include "stb_image.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -11,8 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-#include <list>
 #include <stack>
+#include <vector>
 
 // typedef class InputHandler;
 
@@ -20,19 +20,23 @@ namespace Engine {
 class Engine {
 private:
     friend class InputHandler;
+    friend class Components::MeshRenderer;
+    friend class Node::Camera;
     static Engine *instance;
     InputHandler input;
     GLFWwindow *window;
 
-    std::list<Node::Node *> nodes;
-    std::stack<Components::Mesh *> drawcalls;
-    // std::stack<Cam>
+    std::vector<Node::Node *> nodes;
+    std::stack<Components::MeshRenderer *> drawcalls;
+    std::vector<Node::Camera *> cameraCalls;
+    //  std::stack<Cam>
 
-    void addDrawCall(Components::Mesh &mesh);
+    void addDrawCall(Components::MeshRenderer &mesh);
+    void addCameraCall(Node::Camera &camera);
     void drawcall();
     /* data */
 public:
-    Engine(int width, int hight, char *windowName);
+    Engine(int width, int hight, const char *windowName);
     ~Engine();
     static void exit();
     // Call each frame.

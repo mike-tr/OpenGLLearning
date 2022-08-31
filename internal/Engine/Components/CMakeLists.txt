@@ -1,7 +1,7 @@
 set(proj components)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/mesh.cpp)
+add_library(${proj} src/meshRenderer.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)

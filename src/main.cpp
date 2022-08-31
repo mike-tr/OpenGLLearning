@@ -1,14 +1,20 @@
 // #define GLEW_STATIC
 #include "camera.hpp"
+#include "engine.hpp"
 #include "etime.hpp"
 #include "gameObject.hpp"
 #include "math.h"
-#include "mesh.hpp"
+#include "meshRenderer.hpp"
 #include "shaders.hpp"
 #include "simpleCamera.hpp"
 #include <iomanip>
 
 using namespace std;
+using namespace Engine;
+
+void start() {
+    Engine::Engine engine = Engine::Engine(800, 600, "test engine");
+}
 
 int main(void) {
     GLFWwindow *window;

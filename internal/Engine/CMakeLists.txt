@@ -19,8 +19,8 @@ target_include_directories(${proj}
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Essentials/src/headers
 )
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/internal/Engine/Components)
 add_subdirectory(${PROJECT_SOURCE_DIR}/internal/Engine/Nodes)
+add_subdirectory(${PROJECT_SOURCE_DIR}/internal/Engine/Components)
 
 # add dependencies to this subproject
 target_link_libraries(${proj} glfw libglew_static components nodes)

@@ -2,7 +2,7 @@
 //#include "engine.hpp"
 
 namespace Engine {
-typedef class Engine Engine;
+class Engine;
 
 namespace Components {
 class Componenet {

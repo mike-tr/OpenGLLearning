@@ -1,4 +1,7 @@
 #include "engine.hpp"
+//#include "cameraNode.hpp"
+#include "meshRenderer.hpp"
+// #include "node.hpp"
 
 namespace Engine {
 
@@ -8,7 +11,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 
 Engine *Engine::instance = NULL;
 
-Engine::Engine(int width, int hight, char *windowName) : input(*this) {
+Engine::Engine(int width, int hight, const char *windowName) : input(*this) {
     if (instance != NULL) {
         std::cerr << "Can have only 1 instance of engine running!" << std::endl;
     }
@@ -38,21 +41,28 @@ void Engine::exit() {
 
 void Engine::update() {
     input.update_keys();
-    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-        (*it)->engineUpdate(*this);
+    for (auto node : nodes) {
+        //(*it)->engineUpdate(*this);
     }
 }
 
-void Engine::addDrawCall(Components::Mesh &mesh) {
-    // drawcalls.push(mesh);
+void Engine::addCameraCall(Node::Camera &camera) {
+    cameraCalls.push_back(&camera);
+}
+
+void Engine::addDrawCall(Components::MeshRenderer &mesh) {
+    drawcalls.push(&mesh);
 }
 
 void Engine::drawcall() {
     while (!drawcalls.empty()) {
-        auto &mesh = drawcalls.top();
-
+        Components::MeshRenderer *renderer = drawcalls.top();
+        for (auto camera : cameraCalls) {
+            renderer->draw(*camera);
+        }
         drawcalls.pop();
     }
+    cameraCalls.clear();
 }
 
 void Engine::addNode(Node::Node *node) {

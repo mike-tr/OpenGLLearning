@@ -1,7 +1,7 @@
 set(proj nodes)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/cameraNode.cpp src/transformNode.cpp src/node.cpp)
+add_library(${proj} src/cameraNode.cpp src/transformNode.cpp src/node.cpp src/sceneNode.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)
@@ -16,7 +16,7 @@ target_include_directories(${proj}
     
 
     # Add subdirectories
-    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/Componenets/src/headers
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/Components/src/headers
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/src/headers
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Essentials/src/headers
 )

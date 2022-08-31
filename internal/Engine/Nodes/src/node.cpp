@@ -15,8 +15,8 @@ Node::~Node() {
 void Node::engineUpdate(Engine &engine) {
     this->onEngineUpdate(engine);
     this->update();
-    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-        (*it)->engineUpdate(engine);
+    for (auto node : nodes) {
+        node->engineUpdate(engine);
     }
 }
 

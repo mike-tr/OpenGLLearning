@@ -1,15 +1,17 @@
-#include "mesh.hpp"
+#include "meshRenderer.hpp"
+#include "cameraNode.hpp"
 #include "engine.hpp"
+#include "transformNode.hpp"
 
 namespace Engine {
 namespace Components {
-Mesh::Mesh(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material), parent(parent) {
+MeshRenderer::MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material), parent(parent) {
     this->object = model;
     this->numVertices = numVertices;
     this->indexed = indexed;
 }
 
-void Mesh::draw(const Camera &camera) {
+void MeshRenderer::draw(const Node::Camera &camera) {
     this->material.use();
     unsigned int shaderID = this->material.shader.ID;
     // camera.apply(shaderID);
@@ -24,13 +26,14 @@ void Mesh::draw(const Camera &camera) {
     glDrawArrays(GL_TRIANGLES, 0, this->numVertices);
 }
 
-Mesh::~Mesh() {
+MeshRenderer::~MeshRenderer() {
 }
 
-void Mesh::update() {
+void MeshRenderer::update() {
 }
 
-void Mesh::onEngineUpdate(Engine &engine) {
+void MeshRenderer::onEngineUpdate(Engine &engine) {
+    engine.addDrawCall(*this);
 }
 
 } // namespace Components
