@@ -4,7 +4,7 @@
 
 namespace Engine {
 namespace Node {
-class Transform : Node {
+class Transform : public Node {
 private:
     glm::mat4 rotationMatrix;
     glm::vec3 scaleV;

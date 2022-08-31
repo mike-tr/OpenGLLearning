@@ -1,6 +1,7 @@
 #pragma once
 #include "camera.hpp"
 #include "material.hpp"
+#include "nodes.fwd.hpp"
 
 class GameObject {
 private:
@@ -16,6 +17,7 @@ private:
 public:
     GameObject(unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
     void draw(const Camera &camera);
+    void draw2(const Engine::Node::Camera &camera);
     glm::vec3 getPosition();
     Material &getMaterial();
     void setPosition(glm::vec3 pos);

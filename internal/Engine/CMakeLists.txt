@@ -19,11 +19,15 @@ target_include_directories(${proj}
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Essentials/src/headers
 )
 
+# add_subdirectory(${PROJECT_SOURCE_DIR}/external/glfw)
+# add_subdirectory(${PROJECT_SOURCE_DIR}/external/glew)
+# add_subdirectory(${PROJECT_SOURCE_DIR}/external/glm)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/internal/Engine/Nodes)
 add_subdirectory(${PROJECT_SOURCE_DIR}/internal/Engine/Components)
 
 # add dependencies to this subproject
-target_link_libraries(${proj} glfw libglew_static components nodes)
+target_link_libraries(${proj} glfw libglew_static components nodes essentials)
 
 # create variable that holds reference to location of all source files ( includes )
 set (${includeDir} ${CMAKE_CURRENT_SOURCE_DIR}/src/ PARENT_SCOPE) 

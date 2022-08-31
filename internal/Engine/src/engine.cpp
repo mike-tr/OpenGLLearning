@@ -2,6 +2,9 @@
 //#include "cameraNode.hpp"
 #include "meshRenderer.hpp"
 // #include "node.hpp"
+#include "etime.hpp"
+#include "sceneNode.hpp"
+#include <iostream>
 
 namespace Engine {
 
@@ -9,15 +12,19 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-Engine *Engine::instance = NULL;
+Engine *Engine::instance = nullptr;
 
 Engine::Engine(int width, int hight, const char *windowName) : input(*this) {
-    if (instance != NULL) {
+    std::cout << (instance == nullptr) << std::endl;
+    if (instance != nullptr) {
         std::cerr << "Can have only 1 instance of engine running!" << std::endl;
     }
     instance = this;
 
-    this->window = glfwCreateWindow(width, hight, windowName, NULL, NULL);
+    if (!glfwInit())
+        return;
+
+    this->window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return;
@@ -40,10 +47,17 @@ void Engine::exit() {
 }
 
 void Engine::update() {
+    ETime::update();
     input.update_keys();
-    for (auto node : nodes) {
-        //(*it)->engineUpdate(*this);
-    }
+    scene->engineUpdate(*this);
+    this->drawcall();
+    // for (auto node : nodes) {
+    //     //(*it)->engineUpdate(*this);
+    // }
+}
+
+void Engine::setScene(Node::Scene *scene) {
+    this->scene = scene;
 }
 
 void Engine::addCameraCall(Node::Camera &camera) {
@@ -65,10 +79,6 @@ void Engine::drawcall() {
     cameraCalls.clear();
 }
 
-void Engine::addNode(Node::Node *node) {
-    nodes.push_back(node);
-}
-
 Engine::~Engine() {
     InputHandler::exit();
     glfwTerminate();
@@ -82,4 +92,7 @@ GLFWwindow &Engine::getWindow() {
     return (*this->window);
 }
 
+bool Engine::running() {
+    return !glfwWindowShouldClose(window);
+}
 } // namespace Engine

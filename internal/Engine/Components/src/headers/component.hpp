@@ -1,5 +1,6 @@
 #pragma once
 //#include "engine.hpp"
+#include "nodes.fwd.hpp"
 
 namespace Engine {
 class Engine;
@@ -7,11 +8,14 @@ class Engine;
 namespace Components {
 class Componenet {
 protected:
-    friend class Engine;
-    virtual void onEngineUpdate(Engine &engine) {}
+    friend Engine;
+    friend Node::Node;
+    virtual void onEngineUpdate(Engine &engine);
+
+    void engineUpdate(Engine &engine);
 
 public:
-    virtual void update(){};
+    virtual void update();
 };
 } // namespace Components
 } // namespace Engine

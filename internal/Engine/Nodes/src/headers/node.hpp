@@ -1,7 +1,8 @@
 #pragma once
 //#include "engine.hpp"
+#include "componenets.fwd.hpp"
 #include "engine.fwd.hpp"
-#include <list>
+#include <vector>
 
 namespace Engine {
 // class Engine;
@@ -13,7 +14,8 @@ protected:
     Node(/* args */);
     /* data */
 
-    std::list<Node *> nodes;
+    std::vector<Node *> nodes;
+    std::vector<Components::Componenet *> componenets;
 
     void engineUpdate(Engine &engine);
 
@@ -23,6 +25,7 @@ public:
     ~Node();
     // Called each frame
     void addNode(Node *node);
+    void addComponenet(Components::Componenet *componenet);
     virtual void update();
 };
 } // namespace Node

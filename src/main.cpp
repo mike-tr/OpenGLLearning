@@ -1,22 +1,110 @@
 // #define GLEW_STATIC
 #include "camera.hpp"
+#include "cameraNode.hpp"
 #include "engine.hpp"
 #include "etime.hpp"
 #include "gameObject.hpp"
 #include "math.h"
 #include "meshRenderer.hpp"
+#include "sceneNode.hpp"
 #include "shaders.hpp"
 #include "simpleCamera.hpp"
+#include "transformNode.hpp"
 #include <iomanip>
 
 using namespace std;
 using namespace Engine;
 
-void start() {
+int old();
+int testE();
+int testE2();
+int start() {
+    cout << "creating scene!" << endl;
+    Node::Scene scene = Node::Scene();
+
+    cout << "creating engine" << endl;
     Engine::Engine engine = Engine::Engine(800, 600, "test engine");
+
+    cout << "done!" << endl;
+
+    engine.setScene(&scene);
+
+    cout << "added scene" << endl;
+
+    Node::Camera camera = Node::Camera(glm::vec3(0.0f, 0.0f, 3.0f), Node::Camera::perspective);
+
+    scene.addNode(&camera);
+
+    cout << "added camera" << endl;
+
+    unsigned int mainTex = create_texture("assets/images/brick.jpg");
+    unsigned int blendTex = create_texture("assets/images/rabbit.jpg");
+    unsigned int normalTex = create_texture("assets/images/normalmap.jpg");
+    unsigned int mainTex2 = create_texture("assets/images/skeletor.jpg");
+
+    Shader mainShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
+    mainShader.use();
+    mainShader.setInt("blendTex", mainTex);
+    mainShader.setInt("normalTex", blendTex);
+
+    Shader GroundShader = Shader("assets/shaders/shader.vs", "assets/shaders/ground.fs");
+
+    Material mainMaterial = Material(mainShader);
+    Material groundMaterial = Material(GroundShader);
+
+    Node::Transform obj1 = Node::Transform();
+    unsigned int cubeb = create_cube();
+    Components::MeshRenderer cube = Components::MeshRenderer(obj1, cubeb, 36, true, mainMaterial);
+    obj1.setPosition(glm::vec3(0.0f, -1.0f, -1.0f));
+    obj1.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    cube.getMaterial().setFloat("time", 1);
+    cube.getMaterial().setFloat("offset", 1);
+    cube.getMaterial().setInt("blendTex", mainTex);
+    cube.getMaterial().setInt("normalTex", blendTex);
+    cube.getMaterial().setTexture("normalTex", 2, normalTex);
+
+    // cube.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
+    // cube.getMaterial().setFloat("TestVal", 1.0f);
+
+    obj1.addComponenet(&cube);
+    // GameObject ground = GameObject(cubeb, 36, true, groundMaterial);
+
+    GameObject ground = GameObject(cubeb, 36, true, groundMaterial);
+    ground.setPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+    ground.localScale(glm::vec3(1000.0f, 1.0f, 1000.0f));
+    ground.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
+    ground.getMaterial().setFloat("TestVal", 1.0f);
+
+    cout << "adding objects" << endl;
+
+    scene.addNode(&obj1);
+
+    camera.lookAt(obj1.getPosition());
+    cout << "starting while loop" << endl;
+
+    while (engine.running()) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        engine.update();
+
+        obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+        // ground.draw2(camera);
+
+        glfwSwapBuffers(engine.window);
+        glfwPollEvents();
+    }
+
+    return 0;
 }
 
 int main(void) {
+    // return old();
+    return start();
+    //  return 0;
+}
+
+int old() {
     GLFWwindow *window;
 
     /* Initialize the library */

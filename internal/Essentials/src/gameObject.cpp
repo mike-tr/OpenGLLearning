@@ -1,4 +1,5 @@
 #include "gameObject.hpp"
+#include "cameraNode.hpp"
 
 GameObject::GameObject(unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material) {
     this->object = model;
@@ -18,6 +19,21 @@ void GameObject::localScale(glm::vec3 scale) {
 }
 
 void GameObject::draw(const Camera &camera) {
+    this->material.use();
+    unsigned int shaderID = this->material.shader.ID;
+    camera.apply(shaderID);
+    unsigned int transformLoc = glGetUniformLocation(shaderID, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
+
+    glBindVertexArray(this->object);
+    if (indexed) {
+        glDrawElements(GL_TRIANGLES, this->numVertices, GL_UNSIGNED_INT, 0);
+        return;
+    }
+    glDrawArrays(GL_TRIANGLES, 0, this->numVertices);
+}
+
+void GameObject::draw2(const Engine::Node::Camera &camera) {
     this->material.use();
     unsigned int shaderID = this->material.shader.ID;
     camera.apply(shaderID);

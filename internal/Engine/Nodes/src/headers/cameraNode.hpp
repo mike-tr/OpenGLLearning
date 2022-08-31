@@ -3,7 +3,7 @@
 #include "node.hpp"
 
 namespace Engine::Node {
-class Camera : Node {
+class Camera : public Node {
 public:
     enum Mode {
         perspective,

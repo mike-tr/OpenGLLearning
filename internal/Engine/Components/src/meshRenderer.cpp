@@ -5,7 +5,7 @@
 
 namespace Engine {
 namespace Components {
-MeshRenderer::MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material), parent(parent) {
+MeshRenderer::MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material), transform(parent) {
     this->object = model;
     this->numVertices = numVertices;
     this->indexed = indexed;
@@ -14,9 +14,10 @@ MeshRenderer::MeshRenderer(Node::Transform &parent, unsigned int model, unsigned
 void MeshRenderer::draw(const Node::Camera &camera) {
     this->material.use();
     unsigned int shaderID = this->material.shader.ID;
-    // camera.apply(shaderID);
+    camera.apply(shaderID);
     unsigned int transformLoc = glGetUniformLocation(shaderID, "transform");
     // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
+    transform.applyTransformation(transformLoc);
 
     glBindVertexArray(this->object);
     if (indexed) {
@@ -33,7 +34,12 @@ void MeshRenderer::update() {
 }
 
 void MeshRenderer::onEngineUpdate(Engine &engine) {
+    std::cout << "rendering some mesh" << std::endl;
     engine.addDrawCall(*this);
+}
+
+Material &MeshRenderer::getMaterial() {
+    return material;
 }
 
 } // namespace Components

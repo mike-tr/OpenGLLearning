@@ -12,6 +12,10 @@ target_include_directories(${proj}
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glfw/include
     PRIVATE ${PROJECT_SOURCE_DIR}/external/glm
     PUBLIC ${PROJECT_SOURCE_DIR}/external/headers
+
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/src/headers
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/Nodes/src/headers
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/Components/src/headers
 )
 
 # add dependencies to this subproject

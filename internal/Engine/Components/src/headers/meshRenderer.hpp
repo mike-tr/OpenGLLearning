@@ -11,11 +11,11 @@
 namespace Engine {
 class Engine;
 namespace Components {
-class MeshRenderer final : Componenet {
+class MeshRenderer final : public Componenet {
 private:
     /* data */
     Material material;
-    Node::Transform &parent;
+    Node::Transform &transform;
     unsigned int object;
     unsigned int numVertices;
     bool indexed;
@@ -27,6 +27,7 @@ public:
     void draw(const Node::Camera &camera);
     MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
     ~MeshRenderer();
+    Material &getMaterial();
     void update() override;
 };
 } // namespace Components
