@@ -12,7 +12,7 @@ Mesh::Mesh(Node::Transform &parent, unsigned int model, unsigned int numVertices
 void Mesh::draw(const Camera &camera) {
     this->material.use();
     unsigned int shaderID = this->material.shader.ID;
-    camera.apply(shaderID);
+    // camera.apply(shaderID);
     unsigned int transformLoc = glGetUniformLocation(shaderID, "transform");
     // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
 

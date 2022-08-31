@@ -1,13 +1,15 @@
 #pragma once
-#include "camera.hpp"
+#define FORWARDS
 #include "component.hpp"
 // #include "engine.hpp"
 #include "material.hpp"
 //#include "node.hpp"
 #include "transformNode.hpp"
 
+class Camera;
+
 namespace Engine {
-typedef class Engine Engine;
+class Engine;
 
 namespace Components {
 class Mesh final : Componenet {
@@ -19,6 +21,7 @@ private:
     unsigned int numVertices;
     bool indexed;
 
+protected:
     void onEngineUpdate(Engine &engine) override;
 
 public:

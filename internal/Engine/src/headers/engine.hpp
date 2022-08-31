@@ -1,8 +1,8 @@
 
 #pragma once
+#include "componenets.fwd.hpp"
+
 #include "inputHandler.hpp"
-//#include "mesh.hpp"
-#include "mesh.hpp"
 #include "node.hpp"
 #include "stb_image.h"
 #include <GL/glew.h>

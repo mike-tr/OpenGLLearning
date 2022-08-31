@@ -1,5 +1,5 @@
 #include "node.hpp"
-#include "engine.hpp"
+#include "engine.fwd.hpp"
 #include <iostream>
 
 namespace Engine {

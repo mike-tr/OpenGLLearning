@@ -1,6 +1,5 @@
 #pragma once
-#include "camera.hpp"
-#include "material.hpp"
+#include "functions.hpp"
 #include "node.hpp"
 
 namespace Engine {

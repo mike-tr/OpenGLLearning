@@ -1,7 +1,7 @@
 set(proj components)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/mesh.cpp src/camera.cpp)
+add_library(${proj} src/mesh.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)
@@ -17,6 +17,7 @@ target_include_directories(${proj}
 
     # Add subdirectories
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/src/headers
+    PUBLIC ${PROJECT_SOURCE_DIR}/internal/Engine/Nodes/src/headers
     PUBLIC ${PROJECT_SOURCE_DIR}/internal/Essentials/src/headers
 )
 
