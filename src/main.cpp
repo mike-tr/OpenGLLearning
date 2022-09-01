@@ -37,59 +37,73 @@ int start() {
 
     cout << "added camera" << endl;
 
-    unsigned int mainTex = create_texture("assets/images/brick.jpg");
-    unsigned int blendTex = create_texture("assets/images/rabbit.jpg");
+    unsigned int brickTex = create_texture("assets/images/brick.jpg");
+    unsigned int rabbitTex = create_texture("assets/images/rabbit.jpg");
     unsigned int normalTex = create_texture("assets/images/normalmap.jpg");
-    unsigned int mainTex2 = create_texture("assets/images/skeletor.jpg");
+    unsigned int skeleTex = create_texture("assets/images/skeletor.jpg");
 
     Shader mainShader = Shader("assets/shaders/shader.vs", "assets/shaders/shader.fs");
-    mainShader.use();
-    mainShader.setInt("blendTex", mainTex);
-    mainShader.setInt("normalTex", blendTex);
-
+    // mainShader.use();
+    // mainShader.setInt("blendTex", 1);
+    // mainShader.setInt("normalTex", 2);
+    Shader normalShader = Shader("assets/shaders/shader.vs", "assets/shaders/normal.fs");
     Shader GroundShader = Shader("assets/shaders/shader.vs", "assets/shaders/ground.fs");
 
     Material mainMaterial = Material(mainShader);
     Material groundMaterial = Material(GroundShader);
+    Material normalMaterial = Material(normalShader);
 
     Node::Transform obj1 = Node::Transform();
     unsigned int cubeb = create_cube();
-    Components::MeshRenderer cube = Components::MeshRenderer(obj1, cubeb, 36, true, mainMaterial);
+    Components::MeshRenderer cube = Components::MeshRenderer(obj1, cubeb, 36, true, normalMaterial);
     obj1.setPosition(glm::vec3(0.0f, -1.0f, -1.0f));
     obj1.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
     cube.getMaterial().setFloat("time", 1);
     cube.getMaterial().setFloat("offset", 1);
-    cube.getMaterial().setInt("blendTex", mainTex);
-    cube.getMaterial().setInt("normalTex", blendTex);
-    cube.getMaterial().setTexture("normalTex", 2, normalTex);
-
-    // cube.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
-    // cube.getMaterial().setFloat("TestVal", 1.0f);
+    cube.getMaterial().setTexture("mainTex", brickTex);
 
     obj1.addComponenet(&cube);
-    // GameObject ground = GameObject(cubeb, 36, true, groundMaterial);
 
-    GameObject ground = GameObject(cubeb, 36, true, groundMaterial);
-    ground.setPosition(glm::vec3(0.0f, -5.0f, 0.0f));
-    ground.localScale(glm::vec3(1000.0f, 1.0f, 1000.0f));
-    ground.getMaterial().setFv4("ObjColor", 0.0f, 1.0f, 0.0f, 1.0f);
-    ground.getMaterial().setFloat("TestVal", 1.0f);
+    Node::Transform obj2 = Node::Transform();
+    Components::MeshRenderer cube2 = Components::MeshRenderer(obj2, cubeb, 36, true, mainMaterial);
+    obj2.setPosition(glm::vec3(0.0f, -2.0f, -1.0f));
+    obj2.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    cube2.getMaterial().setFloat("time", 1);
+    cube2.getMaterial().setFloat("offset", 1);
+    cube2.getMaterial().setTexture("blendTex", rabbitTex);
+    cube2.getMaterial().setTexture("mainTex", skeleTex);
+
+    obj2.addComponenet(&cube2);
+
+    Node::Transform obj3 = Node::Transform();
+    Components::MeshRenderer cube3 = Components::MeshRenderer(obj3, cubeb, 36, true, normalMaterial);
+    obj3.setPosition(glm::vec3(1.5f, -1.0f, -1.0f));
+    obj3.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    cube3.getMaterial().setFloat("time", 1);
+    cube3.getMaterial().setFloat("offset", 1);
+    cube3.getMaterial().setTexture("mainTex", brickTex);
+
+    obj3.addComponenet(&cube3);
 
     cout << "adding objects" << endl;
 
     scene.addNode(&obj1);
+    scene.addNode(&obj2);
+    scene.addNode(&obj3);
 
     camera.lookAt(obj1.getPosition());
     cout << "starting while loop" << endl;
 
+    glEnable(GL_DEPTH_TEST);
     while (engine.running()) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         engine.update();
 
         obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
-        // ground.draw2(camera);
 
         glfwSwapBuffers(engine.window);
         glfwPollEvents();
@@ -101,7 +115,7 @@ int start() {
 int main(void) {
     // return old();
     return start();
-    //  return 0;
+    //    return 0;
 }
 
 int old() {
@@ -205,13 +219,13 @@ int old() {
     for (unsigned int i = 0; i < 3; i++) {
         obj[i].getMaterial().setFloat("time", 1);
         obj[i].getMaterial().setFloat("offset", 1);
-        obj[i].getMaterial().setTexture("mainTex", 0, mainTex);
-        obj[i].getMaterial().setTexture("blendTex", 1, blendTex);
-        obj[i].getMaterial().setTexture("normalTex", 2, normalTex);
+        obj[i].getMaterial().setTexture("mainTex", mainTex);
+        obj[i].getMaterial().setTexture("blendTex", blendTex);
+        obj[i].getMaterial().setTexture("normalTex", normalTex);
     }
 
-    obj[2].getMaterial().setTexture("blendTex", 1, mainTex2);
-    obj[1].getMaterial().setTexture("blendTex", 1, normalTex);
+    obj[2].getMaterial().setTexture("blendTex", mainTex2);
+    obj[1].getMaterial().setTexture("blendTex", normalTex);
 
     glEnable(GL_DEPTH_TEST);
     cout << "start while" << endl;
@@ -219,13 +233,23 @@ int old() {
 
     // Camera::mainCamera = Camera(glm::vec3(0.0, 0.0, 3.0), Camera::Mode::perspective);
 
-    Camera::mainCamera.lookAt(glm::vec3(0.0, 0.0, 0.0));
+    GameObject testobj = GameObject(cubeb, 36, true, mat);
+    testobj.setPosition(glm::vec3(0.0f, -1.0f, -1.0f));
+    testobj.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+    testobj.getMaterial().setFloat("time", 1);
+    testobj.getMaterial().setFloat("offset", 1);
+    testobj.getMaterial().setInt("blendTex", mainTex);
+    testobj.getMaterial().setInt("normalTex", blendTex);
+    testobj.getMaterial().setTexture("normalTex", normalTex);
+    testobj.getMaterial().setTexture("blendTex", blendTex);
+
+    Camera::mainCamera.lookAt(testobj.getPosition());
 
     ETime::update();
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        ETime::update();
-        // processInput(window);
+        // ETime::update();
+        //  processInput(window);
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -246,15 +270,17 @@ int old() {
                 axis.z = sqrt(2);
             }
             obj[i].rotate(0.005 * (i + 1), axis);
-            obj[i].draw(Camera::mainCamera);
+            // obj[i].draw(Camera::mainCamera);
         }
+        // obj[0].draw(Camera::mainCamera);
         ground.draw(Camera::mainCamera);
+        testobj.draw(Camera::mainCamera);
 
         for (size_t i = 0; i < 8; i++) {
             obj2[i]->draw(Camera::mainCamera);
         }
         // obj[1].draw(Camera::mainCamera);
-        // obj[2].draw(Camera::mainCamera);
+        //  obj[2].draw(Camera::mainCamera);
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 

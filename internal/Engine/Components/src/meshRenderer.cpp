@@ -34,7 +34,7 @@ void MeshRenderer::update() {
 }
 
 void MeshRenderer::onEngineUpdate(Engine &engine) {
-    std::cout << "rendering some mesh" << std::endl;
+    // std::cout << "rendering some mesh" << std::endl;
     engine.addDrawCall(*this);
 }
 

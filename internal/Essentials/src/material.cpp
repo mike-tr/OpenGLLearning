@@ -44,9 +44,9 @@ void Material::setFv4(const std::string &name, float v1, float v2, float v3, flo
     this->fv4s[name] = glm::vec4(v1, v2, v3, v4);
 }
 
-void Material::setTexture(std::string textureName, unsigned int textureUint, unsigned int textureID) {
-    this->setInt(textureName, textureUint);
-    this->textures[textureUint] = textureID;
+void Material::setTexture(std::string textureName, unsigned int textureID) {
+    // this->setInt(textureName, textureUint);
+    this->textures[textureName] = textureID;
     // std::cout << textureName << " - "
     //           << "New val : " << textureID << " actuall new :" << this->textures.at(textureUint) << std::endl;
 }
@@ -62,9 +62,12 @@ void Material::use() {
     for (const auto &pair : floatUniforms) {
         shader.setFloat(pair.first, pair.second);
     }
+    int i = 0;
     for (const auto &pair : textures) {
-        glActiveTexture(GL_TEXTURE0 + pair.first);
+        glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, pair.second);
+        shader.setInt(pair.first, i);
+        i++;
         // std::cout << pair.first << " ," << pair.second << std::endl;
     }
     for (const auto &pair : fv4s) {
