@@ -65,9 +65,16 @@ void Transform::lookAt(glm::vec3 target) {
     glm::mat4 trans = glm::mat4(1.0f);
     trans = glm::translate(trans, this->position);
 
-    auto lookAxis = glm::normalize(this->position - target);
-    this->rotationMatrix = glm::inverse(glm::lookAt(this->position, target, glm::vec3(0.0f, 1.0f, 0.0f)) * trans);
-    this->recalculate();
+    this->rotationMatrix = glm::inverse(trans * glm::lookAt(this->position, target, glm::vec3(0.0f, 1.0f, 0.0f)));
+    this->transformationMatrix = this->rotationMatrix * glm::scale(trans, this->scaleV);
+    if (this->parent != nullptr) {
+        this->updateTransformMatrix(this->parent->getTransformMatrix());
+    } else {
+        this->updateTransformMatrix(glm::mat4(1.0f));
+    }
+
+    // this->rotationMatrix = glm::inverse(glm::lookAt(this->position, target, glm::vec3(0.0f, 1.0f, 0.0f)) * trans);
+    // this->recalculate();
 }
 
 } // namespace Node

@@ -66,7 +66,7 @@ int start() {
     Node::Transform obj2 = Node::Transform();
     Components::MeshRenderer cube2 = Components::MeshRenderer(obj2, cubeb, 36, true, normalMaterial);
     obj2.setPosition(glm::vec3(2.0f, -3.0f, 0.0f));
-    obj2.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+    obj2.localScale(glm::vec3(1.0f, 1.0f, 2.0f));
 
     cube2.getMaterial().setFloat("time", 1);
     cube2.getMaterial().setFloat("offset", 1);
@@ -121,7 +121,7 @@ int start() {
 
         obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-        obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+        // obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
         obj2.lookAt(obj3.getPosition());
         //  obj2.rotate(deg, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -152,7 +152,7 @@ int start() {
 int main(void) {
     // return old();
     return start();
-    //    return 0;
+    //     return 0;
 }
 
 int old() {
