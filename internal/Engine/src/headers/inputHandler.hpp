@@ -23,8 +23,9 @@ class InputHandler {
 
     InputHandler(Engine &engine);
     void update_keys();
+    void init();
 
-    static InputHandler &init(Engine *engine);
+    // static InputHandler &init(Engine *engine);
 
 public:
     static bool getKey(int key);

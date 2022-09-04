@@ -21,7 +21,7 @@ int start() {
     Node::Scene scene = Node::Scene();
 
     cout << "creating engine" << endl;
-    Engine::Engine engine = Engine::Engine(800, 600, "test engine");
+    Engine::Engine engine = Engine::Engine(800, 600, "test e3ngine");
 
     cout << "done!" << endl;
 
@@ -29,7 +29,7 @@ int start() {
 
     cout << "added scene" << endl;
 
-    Node::Camera camera = Node::Camera(glm::vec3(0.0f, 0.0f, 3.0f), Node::Camera::perspective);
+    Node::Camera camera = Node::Camera(glm::vec3(0.0f, 0.0f, 10.0f), Node::Camera::perspective);
 
     scene.addNode(&camera);
 
@@ -54,7 +54,7 @@ int start() {
     Node::Transform obj1 = Node::Transform();
     unsigned int cubeb = create_cube();
     Components::MeshRenderer cube = Components::MeshRenderer(obj1, cubeb, 36, true, normalMaterial);
-    obj1.setPosition(glm::vec3(0.0f, -1.0f, -1.0f));
+    obj1.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     obj1.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
     cube.getMaterial().setFloat("time", 1);
@@ -64,8 +64,8 @@ int start() {
     // obj1.addComponenet(&cube);
 
     Node::Transform obj2 = Node::Transform();
-    Components::MeshRenderer cube2 = Components::MeshRenderer(obj2, cubeb, 36, true, mainMaterial);
-    obj2.setPosition(glm::vec3(0.0f, -2.0f, -1.0f));
+    Components::MeshRenderer cube2 = Components::MeshRenderer(obj2, cubeb, 36, true, normalMaterial);
+    obj2.setPosition(glm::vec3(2.0f, -3.0f, 0.0f));
     obj2.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
     cube2.getMaterial().setFloat("time", 1);
@@ -88,17 +88,32 @@ int start() {
 
     cout << "adding objects" << endl;
 
-    Components::MeshRenderer cube4 = Components::MeshRenderer(scene, cubeb, 36, true, normalMaterial);
+    Node::Transform obj4 = Node::Transform();
+    Components::MeshRenderer cube4 = Components::MeshRenderer(obj4, cubeb, 36, true, normalMaterial);
+    obj4.setPosition(glm::vec3(-2.0f, -3.0f, 0.0f));
+    obj4.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    cube4.getMaterial().setFloat("time", 1);
+    cube4.getMaterial().setFloat("offset", 1);
+    cube4.getMaterial().setTexture("blendTex", rabbitTex);
+    cube4.getMaterial().setTexture("mainTex", skeleTex);
+
+    // Components::MeshRenderer cube4 = Components::MeshRenderer(scene, cubeb, 36, true, normalMaterial);
 
     scene.addNode(&obj1);
-    scene.addNode(&obj2);
-    // scene.addNode(&obj3);
     obj1.addNode(&obj3);
+    scene.addNode(&obj2);
+    scene.addNode(&obj4);
+    // // scene.addNode(&obj3);
+    // obj1.addNode(&obj3);
 
     camera.lookAt(obj1.getPosition());
     cout << "starting while loop" << endl;
 
+    int i = 0;
     glEnable(GL_DEPTH_TEST);
+
+    float deg = glm::radians(90.0f);
     while (engine.running()) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -106,10 +121,29 @@ int start() {
 
         obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
+        obj1.rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        obj2.lookAt(obj3.getPosition());
+        //  obj2.rotate(deg, glm::vec3(0.0f, 1.0f, 0.0f));
+        //   obj2.rotate(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        if (i > 0) {
+            // obj4.lookAt(obj3.getPosition());
+            std::cout << "obj2 pos : " << obj2.getPosition() << endl;
+            std::cout << "obj3 pos : " << obj3.getPosition() << std::endl;
+            std::cout << "camera at : " << camera.getPos() << std::endl;
+
+            std::cout << "fps : " << 1 / ETime::deltaTime << endl;
+        }
+
         glfwSwapBuffers(engine.window);
         glfwPollEvents();
-
-        // std::cout << "fps : " << 1 / ETime::deltaTime << endl;
+        //  if (once) {
+        //      obj2.rotate(90, glm::vec3(0.0f, 1.0f, 0.0f));
+        //      once = false;
+        //  }
+        //     camera.lookAt(obj2.getPosition());
+        //       camera.lookAt(obj3.getPosition());
     }
 
     return 0;

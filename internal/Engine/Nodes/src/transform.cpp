@@ -16,6 +16,8 @@ void Transform::localScale(glm::vec3 scale) {
 }
 
 glm::vec3 Transform::getPosition() {
+    if (parent != nullptr)
+        return this->parent->globalTransformMatrix * this->position;
     return this->position;
 }
 
@@ -59,8 +61,14 @@ void Transform::updateTransformMatrix(glm::mat4 const parentTransformMatrix) {
     }
 }
 
-void Transform::applyTransformation(unsigned int transformLoc) {
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(this->transformationMatrix));
+void Transform::lookAt(glm::vec3 target) {
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, this->position);
+
+    auto lookAxis = glm::normalize(this->position - target);
+    this->rotationMatrix = glm::inverse(glm::lookAt(this->position, target, glm::vec3(0.0f, 1.0f, 0.0f)) * trans);
+    this->recalculate();
 }
+
 } // namespace Node
 } // namespace Engine

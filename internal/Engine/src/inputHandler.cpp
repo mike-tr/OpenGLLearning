@@ -47,7 +47,9 @@ InputHandler::InputHandler(Engine &engine) : engine(engine) {
     keyMaps.clear();
     keyPending = std::stack<int>();
     instance = this;
+}
 
+void InputHandler::init() {
     glfwSetKeyCallback(engine.window, InputHandler::key_callback);
     glfwSetCursorPosCallback(engine.window, InputHandler::mouse_callback);
 }

@@ -22,8 +22,8 @@ public:
     void localTranslate(glm::vec3 direction);
     void localScale(glm::vec3 scale);
     void rotate(float degRadians, glm::vec3 axis);
+    void lookAt(glm::vec3 target);
     void recalculate();
-    void applyTransformation(unsigned int transformLoc);
 };
 } // namespace Node
 } // namespace Engine

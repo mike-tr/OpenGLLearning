@@ -39,6 +39,8 @@ Engine::Engine(int width, int hight, const char *windowName) : input(*this) {
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    input.init();
+
     // cout << glGetString(GL_VERSION) << endl;
 }
 
