@@ -2,7 +2,7 @@
 //#include "cameraNode.hpp"
 #include "Componenet/meshRenderer.hpp"
 // #include "node.hpp"
-#include "Node/sceneNode.hpp"
+#include "Node/scene.hpp"
 #include "etime.hpp"
 #include <iostream>
 

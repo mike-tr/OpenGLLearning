@@ -1,4 +1,4 @@
-#include "Node/cameraNode.hpp"
+#include "Node/camera.hpp"
 #include "engine.hpp"
 
 #define PI 3.14159265359f

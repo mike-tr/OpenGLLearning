@@ -1,8 +1,8 @@
 // #define GLEW_STATIC
 #include "Componenet/meshRenderer.hpp"
-#include "Node/cameraNode.hpp"
-#include "Node/sceneNode.hpp"
-#include "Node/transformNode.hpp"
+#include "Node/camera.hpp"
+#include "Node/scene.hpp"
+#include "Node/transform.hpp"
 #include "camera.hpp"
 #include "engine.hpp"
 #include "etime.hpp"

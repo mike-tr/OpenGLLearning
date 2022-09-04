@@ -1,5 +1,5 @@
 #include "Componenet/meshRenderer.hpp"
-#include "Node/cameraNode.hpp"
+#include "Node/camera.hpp"
 #include "engine.hpp"
 #include "functions.hpp"
 // #include "functions.hpp"

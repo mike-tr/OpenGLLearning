@@ -1,7 +1,7 @@
 set(proj nodes)
 set(includeDir ${proj}IncludeDirs)
 
-add_library(${proj} src/cameraNode.cpp src/transformNode.cpp src/node.cpp src/sceneNode.cpp)
+add_library(${proj} src/camera.cpp src/transform.cpp src/node.cpp src/scene.cpp)
 target_compile_features(${proj} PRIVATE cxx_std_20)
 
 target_include_directories(${proj} PUBLIC src/headers)
