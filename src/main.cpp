@@ -16,8 +16,6 @@ using namespace std;
 using namespace Engine;
 
 int old();
-int testE();
-int testE2();
 int start() {
     cout << "creating scene!" << endl;
     Node::Scene scene = Node::Scene();
@@ -63,7 +61,7 @@ int start() {
     cube.getMaterial().setFloat("offset", 1);
     cube.getMaterial().setTexture("mainTex", brickTex);
 
-    obj1.addComponenet(&cube);
+    // obj1.addComponenet(&cube);
 
     Node::Transform obj2 = Node::Transform();
     Components::MeshRenderer cube2 = Components::MeshRenderer(obj2, cubeb, 36, true, mainMaterial);
@@ -75,24 +73,27 @@ int start() {
     cube2.getMaterial().setTexture("blendTex", rabbitTex);
     cube2.getMaterial().setTexture("mainTex", skeleTex);
 
-    obj2.addComponenet(&cube2);
+    // obj2.addComponenet(&cube2);
 
     Node::Transform obj3 = Node::Transform();
     Components::MeshRenderer cube3 = Components::MeshRenderer(obj3, cubeb, 36, true, normalMaterial);
-    obj3.setPosition(glm::vec3(1.5f, -1.0f, -1.0f));
+    obj3.setPosition(glm::vec3(1.5f, 0.0f, -1.0f));
     obj3.localScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
     cube3.getMaterial().setFloat("time", 1);
     cube3.getMaterial().setFloat("offset", 1);
     cube3.getMaterial().setTexture("mainTex", brickTex);
 
-    obj3.addComponenet(&cube3);
+    // obj3.addComponenet(&cube3);
 
     cout << "adding objects" << endl;
 
+    Components::MeshRenderer cube4 = Components::MeshRenderer(scene, cubeb, 36, true, normalMaterial);
+
     scene.addNode(&obj1);
     scene.addNode(&obj2);
-    scene.addNode(&obj3);
+    // scene.addNode(&obj3);
+    obj1.addNode(&obj3);
 
     camera.lookAt(obj1.getPosition());
     cout << "starting while loop" << endl;
@@ -107,6 +108,8 @@ int start() {
 
         glfwSwapBuffers(engine.window);
         glfwPollEvents();
+
+        // std::cout << "fps : " << 1 / ETime::deltaTime << endl;
     }
 
     return 0;

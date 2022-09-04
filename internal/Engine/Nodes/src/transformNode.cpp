@@ -45,6 +45,18 @@ void Transform::recalculate() {
     trans = glm::scale(trans, this->scaleV);
 
     this->transformationMatrix = trans;
+    if (this->parent != nullptr) {
+        this->updateTransformMatrix(this->parent->getTransformMatrix());
+    } else {
+        this->updateTransformMatrix(glm::mat4(1.0f));
+    }
+}
+
+void Transform::updateTransformMatrix(glm::mat4 const parentTransformMatrix) {
+    this->globalTransformMatrix = parentTransformMatrix * this->transformationMatrix;
+    for (auto node : nodes) {
+        node->updateTransformMatrix(this->globalTransformMatrix);
+    }
 }
 
 void Transform::applyTransformation(unsigned int transformLoc) {

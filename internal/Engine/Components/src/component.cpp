@@ -1,4 +1,5 @@
 #include "component.hpp"
+#include "node.hpp"
 
 namespace Engine::Components {
 
@@ -11,6 +12,11 @@ void Componenet::engineUpdate(Engine &engine) {
 }
 
 void Componenet::update() {
+}
+
+Componenet::Componenet(Node::Node *parent) {
+    parent->addComponenet(this);
+    this->parent = parent;
 }
 
 } // namespace Engine::Components

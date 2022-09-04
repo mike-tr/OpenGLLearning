@@ -6,6 +6,7 @@
 namespace Engine {
 namespace Node {
 Node::Node(/* args */) {
+
     nodes.clear();
 }
 
@@ -27,6 +28,7 @@ void Node::engineUpdate(Engine &engine) {
 
 void Node::addNode(Node *node) {
     nodes.push_back(node);
+    node->parent = this;
 }
 
 void Node::update() {
@@ -35,6 +37,17 @@ void Node::update() {
 
 void Node::addComponenet(Components::Componenet *componenet) {
     componenets.push_back(componenet);
+}
+
+glm::mat4 const Node::getTransformMatrix() {
+    return this->globalTransformMatrix;
+}
+
+void Node::updateTransformMatrix(glm::mat4 const parentTransformMatrix) {
+    this->globalTransformMatrix = parentTransformMatrix;
+    for (auto node : nodes) {
+        node->updateTransformMatrix(parentTransformMatrix);
+    }
 }
 
 } // namespace Node

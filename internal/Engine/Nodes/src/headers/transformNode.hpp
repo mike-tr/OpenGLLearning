@@ -11,6 +11,9 @@ private:
     glm::mat4 transformationMatrix;
     glm::vec3 position;
 
+protected:
+    void updateTransformMatrix(glm::mat4 const parentTransformMatrix) override;
+
 public:
     Transform();
     glm::vec3 getPosition();

@@ -10,11 +10,13 @@ class Componenet {
 protected:
     friend Engine;
     friend Node::Node;
+    Node::Node *parent;
     virtual void onEngineUpdate(Engine &engine);
 
     void engineUpdate(Engine &engine);
 
 public:
+    Componenet(Node::Node *parent);
     virtual void update();
 };
 } // namespace Components

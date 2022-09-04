@@ -15,7 +15,7 @@ class MeshRenderer final : public Componenet {
 private:
     /* data */
     Material material;
-    Node::Transform &transform;
+    // Node::Transform &transform;
     unsigned int object;
     unsigned int numVertices;
     bool indexed;
@@ -25,7 +25,7 @@ protected:
 
 public:
     void draw(const Node::Camera &camera);
-    MeshRenderer(Node::Transform &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
+    MeshRenderer(Node::Node &parent, unsigned int model, unsigned int numVertices, bool indexed, const Material &material);
     ~MeshRenderer();
     Material &getMaterial();
     void update() override;
