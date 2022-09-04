@@ -1,5 +1,5 @@
 #include "gameObject.hpp"
-#include "cameraNode.hpp"
+#include "Node/cameraNode.hpp"
 
 GameObject::GameObject(unsigned int model, unsigned int numVertices, bool indexed, const Material &material) : material(material) {
     this->object = model;

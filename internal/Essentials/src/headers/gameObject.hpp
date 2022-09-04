@@ -1,7 +1,7 @@
 #pragma once
+#include "Node/nodes.fwd.hpp"
 #include "camera.hpp"
 #include "material.hpp"
-#include "nodes.fwd.hpp"
 
 class GameObject {
 private:

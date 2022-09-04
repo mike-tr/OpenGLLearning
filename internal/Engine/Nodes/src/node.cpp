@@ -1,5 +1,5 @@
-#include "node.hpp"
-#include "component.hpp"
+#include "Node/node.hpp"
+#include "Componenet/component.hpp"
 #include "engine.fwd.hpp"
 #include <iostream>
 

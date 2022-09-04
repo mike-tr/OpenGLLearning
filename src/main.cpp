@@ -1,15 +1,15 @@
 // #define GLEW_STATIC
+#include "Componenet/meshRenderer.hpp"
+#include "Node/cameraNode.hpp"
+#include "Node/sceneNode.hpp"
+#include "Node/transformNode.hpp"
 #include "camera.hpp"
-#include "cameraNode.hpp"
 #include "engine.hpp"
 #include "etime.hpp"
 #include "gameObject.hpp"
 #include "math.h"
-#include "meshRenderer.hpp"
-#include "sceneNode.hpp"
 #include "shaders.hpp"
 #include "simpleCamera.hpp"
-#include "transformNode.hpp"
 #include <iomanip>
 
 using namespace std;

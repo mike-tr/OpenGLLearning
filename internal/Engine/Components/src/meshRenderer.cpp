@@ -1,9 +1,9 @@
-#include "meshRenderer.hpp"
-#include "cameraNode.hpp"
+#include "Componenet/meshRenderer.hpp"
+#include "Node/cameraNode.hpp"
 #include "engine.hpp"
 #include "functions.hpp"
 // #include "functions.hpp"
-#include "node.hpp"
+#include "Node/node.hpp"
 //#include "transformNode.hpp"
 
 namespace Engine {

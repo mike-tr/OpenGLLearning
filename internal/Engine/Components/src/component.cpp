@@ -1,5 +1,5 @@
-#include "component.hpp"
-#include "node.hpp"
+#include "Componenet/component.hpp"
+#include "Node/node.hpp"
 
 namespace Engine::Components {
 

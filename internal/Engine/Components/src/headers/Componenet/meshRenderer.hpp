@@ -1,7 +1,7 @@
 #pragma once
 #define FORWARDS
+#include "Node/nodes.fwd.hpp"
 #include "component.hpp"
-#include "nodes.fwd.hpp"
 // #include "engine.hpp"
 #include "material.hpp"
 //#include "node.hpp"

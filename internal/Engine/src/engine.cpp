@@ -1,9 +1,9 @@
 #include "engine.hpp"
 //#include "cameraNode.hpp"
-#include "meshRenderer.hpp"
+#include "Componenet/meshRenderer.hpp"
 // #include "node.hpp"
+#include "Node/sceneNode.hpp"
 #include "etime.hpp"
-#include "sceneNode.hpp"
 #include <iostream>
 
 namespace Engine {
