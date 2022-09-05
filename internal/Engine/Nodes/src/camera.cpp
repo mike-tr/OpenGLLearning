@@ -1,4 +1,5 @@
 #include "Node/camera.hpp"
+#include "Node/node.hpp"
 #include "engine.hpp"
 
 #define PI 3.14159265359f
@@ -12,7 +13,7 @@ Camera::Camera(glm::vec3 startPos, Mode projection) {
     this->rollMatrix = glm::mat4(1.0f);
     this->scaleV = glm::vec3(1.0, 1.0, 1.0);
     this->setProjectionMode(projection);
-    this->lookAt(glm::vec3(0.0, 0.0, 0.0));
+    this->lookAt(glm::vec3(0.0, 0.0, -1.0) + startPos);
     std::cout << pitch << "," << yaw << ":" << this->forwardAxis << std::endl;
     this->recalculate();
 }
@@ -101,7 +102,7 @@ void Camera::scale(glm::vec3 scale) {
 
 void Camera::apply(unsigned int shader) const {
     unsigned int viewLoc = glGetUniformLocation(shader, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(this->viewMatrix));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(this->globalViewMatrix));
     unsigned int projectionLoc = glGetUniformLocation(shader, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
 }
@@ -115,7 +116,24 @@ void Camera::recalculate() {
     // this->viewMatrix = trans;
     this->viewMatrix = this->rollMatrix * glm::lookAt(this->position, this->position - this->forwardAxis, this->up());
     this->viewMatrix = glm::scale(this->viewMatrix, this->scaleV);
+
+    if (this->parent != nullptr) {
+        this->updateTransformMatrix(this->parent->getTransformMatrix());
+    } else {
+        this->updateTransformMatrix(glm::mat4(1.0f));
+    }
     // std::cout << upAxis << " : " << this->up() << std::endl;
+}
+
+void Camera::updateTransformMatrix(glm::mat4 const parentTransformMatrix) {
+    // globalTransform is where the camera actually is in world space.
+    // remember that inorder to draw everthing we need to translate everything in word in the inverse of the camera position and rotation
+    // so global vewmatrix is simply the inverse of the trasformation matrix. ( so we dont have to calculate it every frame. )
+    this->globalTransformMatrix = parentTransformMatrix * glm::inverse(this->viewMatrix);
+    this->globalViewMatrix = glm::inverse(this->globalTransformMatrix);
+    for (auto node : nodes) {
+        node->updateTransformMatrix(this->globalTransformMatrix);
+    }
 }
 
 void Camera::localTranslate(glm::vec3 translate) {

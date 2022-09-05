@@ -18,7 +18,7 @@ private:
     glm::mat4 projectionMatrix;
     glm::vec3 forwardAxis;
     glm::vec3 upAxis = glm::vec3(0.0, 1.0, 0.0);
-
+    glm::mat4 globalViewMatrix;
     Mode projectionMode;
     float yaw, pitch, roll;
 
@@ -26,6 +26,7 @@ private:
 
 protected:
     void onEngineUpdate(Engine &engine) override;
+    void updateTransformMatrix(glm::mat4 const parentTransformMatrix) override;
 
 public:
     // static Camera mainCamera;

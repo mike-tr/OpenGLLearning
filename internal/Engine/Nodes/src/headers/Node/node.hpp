@@ -9,11 +9,13 @@ namespace Engine {
 // class Engine;
 namespace Node {
 class Transform;
+class Camera;
 class Node {
 protected:
     glm::mat4 globalTransformMatrix = glm::mat4(1.0f);
     friend Engine;
     friend Transform;
+    friend Camera;
     Node *parent = nullptr;
     Node(/* args */);
     /* data */

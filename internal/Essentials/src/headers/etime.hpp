@@ -2,9 +2,8 @@
 
 class ETime {
 private:
-    static float lastFrame;
-
 public:
     static float deltaTime;
+    static float timePassed;
     static void update();
 };

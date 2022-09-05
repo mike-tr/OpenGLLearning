@@ -406,3 +406,11 @@ unsigned int create_cube_bad() {
 
     return VAO;
 }
+
+// #include "Node/transform.hpp"
+// #include "property.hpp"
+
+// Property<Engine::Node::Transform, glm::vec3> &operator+=(Property<Engine::Node::Transform, glm::vec3> &base, const glm::vec3 &other) {
+//     base = (glm::vec3)base + other;
+//     return base;
+// }
