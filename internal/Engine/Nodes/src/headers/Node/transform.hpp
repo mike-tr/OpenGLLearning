@@ -17,6 +17,8 @@ private:
     void setLocalPosition(const glm::vec3 &pos);
     void setGlobalPosition(const glm::vec3 &pos);
 
+    void translate(const glm::vec3 &direction);
+
 protected:
     void updateTransformMatrix(glm::mat4 const parentTransformMatrix) override;
 
@@ -28,8 +30,7 @@ public:
 
     Transform();
 
-    void translate(const glm::vec3 &direction);
-    //void localTranslate(const glm::vec3 &direction);
+    // void localTranslate(const glm::vec3 &direction);
     void scale(glm::vec3 scale);
     void rotate(float degRadians, glm::vec3 axis);
     void lookAt(glm::vec3 target);

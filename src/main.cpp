@@ -3,7 +3,7 @@
 #include "Node/camera.hpp"
 #include "Node/scene.hpp"
 #include "Node/transform.hpp"
-#include "camera.hpp"
+// #include "camera.hpp"
 #include "engine.hpp"
 #include "etime.hpp"
 #include "gameObject.hpp"
@@ -142,6 +142,11 @@ int start() {
 
         camNode.position += camNode.forward() * t * 0.05f;
         camNode.lookAt(obj3.position);
+
+        if (((int)(ETime::timePassed * 10)) % 10 == 0) {
+            cout << "moved! " << ETime::timePassed << endl;
+            obj3.position = glm::vec3(1.5f, 0.0f, -1.0f);
+        }
         // camNode.translate(glm::vec3(0.0f, 0.0f, 0.05f * t));
         // if (ETime::timePassed > 5) {
         //     camNode.localTranslate(glm::vec3(0.0f, 0.0f, t * 0.01f));
